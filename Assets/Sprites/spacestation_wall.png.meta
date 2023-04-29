@@ -977,6 +977,27 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: spacestation_wall_41
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 0
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 70265ef3c6cf3654a992494fc463d627
+      internalID: -2086176303
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -1024,6 +1045,7 @@ TextureImporter:
       spacestation_wall_39: -282161839
       spacestation_wall_4: -2045764881
       spacestation_wall_40: -1499752721
+      spacestation_wall_41: -2086176303
       spacestation_wall_5: 2048760297
       spacestation_wall_6: 1128881524
       spacestation_wall_7: 1707583777
