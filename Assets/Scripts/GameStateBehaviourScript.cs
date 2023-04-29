@@ -1,4 +1,5 @@
 using System;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -54,7 +55,7 @@ public class GameStateBehaviourScript : MonoBehaviour
 
     void Start()
     {
-        ChangeToInit();
+        ChangeToStart();
     }
 
     public GameState CurrentGameState => gameState;
@@ -94,7 +95,27 @@ public class GameStateBehaviourScript : MonoBehaviour
         }
         currentStatsArray[index][0] = currentPoints;
         onStatsChange.Invoke(index, currentStatsArray[index]);
+        CheckPointCompleteness();
         return true;
+    }
+
+    private void CheckPointCompleteness()
+    {
+        bool isComplet = true;
+        for (int i = 0; i < currentStatsArray.Length; i++)
+        {
+            Vector2Int stats = currentStatsArray[i];
+            if (stats[0] != stats[1])
+            {
+                isComplet = false;
+                break;
+            }
+        }
+
+        if (isComplet)
+        {
+            this.ChangeToFinish();
+        }
     }
     
     #region EventFunctions
