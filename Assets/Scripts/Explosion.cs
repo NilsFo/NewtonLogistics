@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
+using Random = UnityEngine.Random;
 
 public class Explosion : MonoBehaviour
 {
@@ -40,6 +41,7 @@ public class Explosion : MonoBehaviour
         {
             explosionInProgress = false;
             stopExplosionNextFrame = false;
+            Destroy(gameObject);
         }
 
         if (explosionInProgress)
@@ -92,11 +94,12 @@ public class Explosion : MonoBehaviour
         var rb = other.GetComponent<Rigidbody2D>();
         if (rb != null)
         {
-            var impulse = other.transform.position - transform.position;
+            Vector2 impulse = rb.worldCenterOfMass - (Vector2)transform.position;
             impulse = impulse.normalized;
             impulse = impulse * (explosionMagnitude *
                                  (1.0f - explosionDistanceMultCurve.Evaluate(GetExplosionRangeProgressPercent())));
             rb.AddForce(impulse, ForceMode2D.Impulse);
+            rb.AddTorque(Random.Range(-5f, 5f));
         }
     }
 
