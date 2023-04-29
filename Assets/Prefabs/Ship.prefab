@@ -52,7 +52,7 @@ MonoBehaviour:
   forwardThrust: 16
   sideThrust: 4
   backwardThrust: 16
-  pullForce: 100
+  pullForce: 200
   pullDistance: 2
   rb: {fileID: 1832836480714434160}
   thrusterF: {fileID: 1832836482554939685}
@@ -568,7 +568,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 3.75, y: 2.125}
+  m_Size: {x: 4, y: 2.125}
   m_EdgeRadius: 0
 --- !u!61 &1832836482157367708
 BoxCollider2D:

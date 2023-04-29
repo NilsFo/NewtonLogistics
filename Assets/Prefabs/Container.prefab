@@ -445,8 +445,8 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 3.625, y: 1.625}
-  m_EdgeRadius: 0.0625
+  m_Size: {x: 4, y: 2}
+  m_EdgeRadius: 0
 --- !u!1001 &575626908683439019
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -124,7 +125,7 @@ public class ShipController : MonoBehaviour {
             if (results.Count > 0) {
                 foreach (var col in results) {
                     var cargo = col.GetComponent<Cargo>();
-                    if(cargo != null)
+                    if(cargo != null && cargo.cargoState == Cargo.CargoState.Free)
                         _nearbyConnectors.Add((outsideCon, cargo));
                 }
             }
@@ -132,8 +133,10 @@ public class ShipController : MonoBehaviour {
     }
 
     public void PullConnectors() {
+        _nearbyConnectors = _nearbyConnectors.OrderBy(tuple => (tuple.Item1.transform.position - tuple.Item2.transform.position).magnitude).ToList();
+        List<Cargo> cargoBeingPulled = new List<Cargo>();
         foreach (var (shipConnector, cargo) in _nearbyConnectors) {
-            if(shipConnector.connectorState != Connector.ConnectorState.AttachedOutside)
+            if(shipConnector.connectorState != Connector.ConnectorState.AttachedOutside || cargoBeingPulled.Contains(cargo))
                 continue;
 
             var minDistance = float.MaxValue;
@@ -150,16 +153,18 @@ public class ShipController : MonoBehaviour {
             }
             if (minDistance < pullDistance) {
                 var modPullForce = pullForce * (1 - minDistance / pullDistance) * (1 - minDistance / pullDistance);
-                cargo.rb.AddForceAtPosition(Time.fixedDeltaTime * pullForce * delta, cargoConnector.transform.position);
-                rb.AddForceAtPosition(Time.fixedDeltaTime * pullForce * -delta, shipConnector.transform.position);
+                cargo.rb.AddForceAtPosition(Time.fixedDeltaTime * modPullForce * delta, cargoConnector.transform.position);
+                rb.AddForceAtPosition(Time.fixedDeltaTime * modPullForce * -delta, shipConnector.transform.position);
                 Debug.DrawLine(cargoConnector.transform.position, shipConnector.transform.position, Color.yellow, Time.fixedDeltaTime);
                 shipConnector.connectorState = Connector.ConnectorState.AttachedOutsidePulling;
+                cargoBeingPulled.Add(cargo);
             }
             if (minDistance < 0.1f) {
                 Connect(shipConnector, cargo, cargoConnector);
             }
         }
     }
+    
     private void Connect(Connector shipConnector, Cargo cargo, Connector cargoConnector) {
         if (cargo.cargoState == Cargo.CargoState.Attached) {
             // No need to attach something already attached
@@ -174,10 +179,22 @@ public class ShipController : MonoBehaviour {
         shipConnector.connectorState = Connector.ConnectorState.AttachedInside;
 
         cargo.cargoState = Cargo.CargoState.Attached;
+        
+        // Snap to grid
+        var relPos = transform.worldToLocalMatrix.MultiplyPoint3x4(cargo.transform.position);
+        var x = relPos.x;
+        var y = relPos.y;
+        x = Mathf.Round(x / 2) * 2;
+        y = Mathf.Round(y / 2) * 2;
+        cargo.transform.position = transform.localToWorldMatrix.MultiplyPoint3x4(new Vector2(x, y));
+        var angle = cargo.transform.rotation.eulerAngles.z - transform.rotation.eulerAngles.z;
+        angle = Mathf.Round(angle / 90f) * 90f;
+        //cargo.transform.rotation = Quaternion.Euler(0,0, transform.rotation.z + angle);
 
         _insideConnectors.Add(shipConnector, cargoConnector);
         outsideConnectors.Remove(shipConnector);
         foreach (var cargoCon in cargo.connectors) {
+            cargoCon.gameObject.layer = LayerMask.NameToLayer("Ship");;
             if (cargoCon != cargoConnector) {
                 outsideConnectors.Add(cargoCon);
             }
