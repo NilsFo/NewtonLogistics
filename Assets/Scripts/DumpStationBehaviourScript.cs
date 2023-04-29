@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
@@ -8,7 +10,8 @@ public class DumpStationBehaviourScript : MonoBehaviour
 {
     [SerializeField] private Collider2D myCollider2D;
     [SerializeField] private GameStateBehaviourScript gameState;
-
+    [SerializeField] private TextMeshProUGUI textLabel;
+    
     [SerializeField] private int stationIndex;
     [SerializeField] private float pushPower = 5f;
     
@@ -31,6 +34,11 @@ public class DumpStationBehaviourScript : MonoBehaviour
         {
             listOfInTriggerWrongDump = new List<DumpableBehaviourScript>();
         }
+    }
+
+    private void Start()
+    {
+        textLabel.text = "" + (stationIndex + 1);
     }
 
     // Update is called once per frame
