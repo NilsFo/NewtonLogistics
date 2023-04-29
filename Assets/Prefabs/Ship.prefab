@@ -49,10 +49,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 601de8475a0801246b07793c2da77815, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  forwardThrust: 16
-  sideThrust: 4
-  backwardThrust: 16
-  pullForce: 400
+  forwardThrust: 32
+  sideThrust: 8
+  backwardThrust: 32
+  pullForce: 800
   pullDistance: 2
   rb: {fileID: 1832836480714434160}
   thrusterF: {fileID: 1832836482554939685}
