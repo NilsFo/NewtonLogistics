@@ -2,12 +2,16 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class Explosion : MonoBehaviour
 {
     [Header("Explosion Settings")] public float explosionMagnitude;
     public float explosionRadius;
-    public AnimationCurve explosionDistanceMult;
+
+    [FormerlySerializedAs("explosionDistanceMult")]
+    public AnimationCurve explosionDistanceMultCurve;
+
     public CircleCollider2D pushCollider;
 
     [Header("Expansion Settings")] private List<GameObject> alreadyExplodedObjects;
@@ -32,7 +36,9 @@ public class Explosion : MonoBehaviour
     {
         if (explosionInProgress)
         {
-            pushCollider.radius = pushCollider.radius + Time.deltaTime * explosionSpeed;
+            float newRad = pushCollider.radius + Time.deltaTime * explosionSpeed;
+            newRad = Mathf.Max(newRad, explosionRadius);
+            pushCollider.radius = newRad;
             if (pushCollider.radius >= explosionRadius)
             {
                 explosionInProgress = false;
@@ -58,6 +64,13 @@ public class Explosion : MonoBehaviour
         //Debug.DrawLine(transform.position, roamingOrigin);
         Vector3 wireOrigin = new Vector3(transform.position.x, transform.position.y, transform.position.z - 1);
         UnityEditor.Handles.DrawWireDisc(wireOrigin, Vector3.forward, explosionRadius);
+
+        UnityEditor.Handles.DrawWireDisc(wireOrigin, Vector3.forward,
+            explosionRadius * explosionDistanceMultCurve.Evaluate(0.25f));
+        UnityEditor.Handles.DrawWireDisc(wireOrigin, Vector3.forward,
+            explosionRadius * explosionDistanceMultCurve.Evaluate(0.5f));
+        UnityEditor.Handles.DrawWireDisc(wireOrigin, Vector3.forward,
+            explosionRadius * explosionDistanceMultCurve.Evaluate(0.75f));
     }
 
     public float GetExplosionRangeProgressPercent()
@@ -72,9 +85,10 @@ public class Explosion : MonoBehaviour
         {
             var impulse = other.transform.position - transform.position;
             impulse = impulse.normalized;
-            impulse = impulse * (explosionMagnitude*(1.0f - explosionDistanceMult.Evaluate(GetExplosionRangeProgressPercent())));
+            impulse = impulse * (explosionMagnitude *
+                                 (1.0f - explosionDistanceMultCurve.Evaluate(GetExplosionRangeProgressPercent())));
             rb.AddForce(impulse, ForceMode2D.Impulse);
-            print("explosion impulse: "+impulse);
+            print("explosion impulse: " + impulse);
         }
     }
 
@@ -85,7 +99,7 @@ public class Explosion : MonoBehaviour
         {
             alreadyExplodedObjects.Add(gm);
             PushObject(gm);
-            print("explosion detected: "+other.gameObject.name);
+            print("explosion detected: " + other.gameObject.name);
         }
     }
 }
