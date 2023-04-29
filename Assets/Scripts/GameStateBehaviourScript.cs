@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -26,8 +27,8 @@ public class GameStateBehaviourScript : MonoBehaviour
 
     [SerializeField] private int[] levelStats;
     [SerializeField] private Vector2Int[] currentStatsArray;
-    
-    void Start()
+
+    private void Awake()
     {
         currentStatsArray = new Vector2Int[levelStats.Length];
         
@@ -49,7 +50,10 @@ public class GameStateBehaviourScript : MonoBehaviour
         
         if (onStatsChange == null)
             onStatsChange = new UnityEvent<int, Vector2Int>();
-        
+    }
+
+    void Start()
+    {
         ChangeToInit();
     }
 
@@ -69,29 +73,21 @@ public class GameStateBehaviourScript : MonoBehaviour
     {
         return currentStatsArray[index];
     }
-    
-    public bool AddPoints(int index)
+
+    public bool SetPoints(int index, int points)
     {
+        int currentPoints = points;
         if (currentStatsArray[index][0] >= currentStatsArray[index][1])
         {
             //Max Points reached! try to add more Points than possible!
-            Debug.LogError("Trying to add more Points than possible!");
-            return false;
+            currentPoints = currentStatsArray[index][1];
         }
-        currentStatsArray[index][0]++;
-        onStatsChange.Invoke(index, currentStatsArray[index]);
-        return true;
-    }
-    
-    public bool RemovePoints(int index)
-    {
         if (currentStatsArray[index][0] <= 0)
         {
             //Min Points reached! try to remove more Points than possible!
-            Debug.LogError("Trying to remove more Points than possible!");
-            return false;
+            currentPoints = 0;
         }
-        currentStatsArray[index][0]--;
+        currentStatsArray[index][0] = currentPoints;
         onStatsChange.Invoke(index, currentStatsArray[index]);
         return true;
     }
