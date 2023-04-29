@@ -14,13 +14,13 @@ public enum GameState
 public class GameStateBehaviourScript : MonoBehaviour
 {
     //UnityEvents
-    [SerializeField] private UnityEvent onInit;
-    [SerializeField] private UnityEvent onIntro;
-    [SerializeField] private UnityEvent onPause;
-    [SerializeField] private UnityEvent onStart;
-    [SerializeField] private UnityEvent onFinish;
+    public UnityEvent onInit;
+    public UnityEvent onIntro;
+    public UnityEvent onPause;
+    public UnityEvent onStart;
+    public UnityEvent onFinish;
     
-    [SerializeField] private UnityEvent<int,Vector2Int> onStatsChange;
+    public UnityEvent<int,Vector2Int> onStatsChange;
     
     //Stats
     [SerializeField] private GameState gameState = GameState.Init;
@@ -72,6 +72,11 @@ public class GameStateBehaviourScript : MonoBehaviour
     public Vector2Int GetPointsForIndex(int index)
     {
         return currentStatsArray[index];
+    }
+
+    public Vector2Int[] GetStatsArray()
+    {
+        return currentStatsArray;
     }
 
     public bool SetPoints(int index, int points)
