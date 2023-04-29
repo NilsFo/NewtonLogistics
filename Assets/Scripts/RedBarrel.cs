@@ -1,11 +1,17 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class RedBarrel : MonoBehaviour
 {
+    
+    [Header("Fass Settings")]
     public bool explodeable;
+    public float minHitStrength = 1;
 
+    [Header("Explosion Settings")]
+    public Explosion Explosion; 
 
     // Start is called before the first frame update
     void Start()
@@ -14,6 +20,32 @@ public class RedBarrel : MonoBehaviour
 
     // Update is called once per frame
     void Update()
+    {
+    }
+
+    private void OnCollisionEnter2D(Collision2D other)
+    {
+        float mag = other.relativeVelocity.magnitude;
+        print("barrel hit strength: "+mag);
+
+        if (mag>=minHitStrength)
+        {
+            Explode();
+        }
+        else
+        {
+            print("Not enough!");
+        }
+    }
+
+    public void Explode()
+    {
+        Explosion.Explode();
+        Explosion.gameObject.transform.parent = null;
+        Destroy(gameObject);
+    }
+
+    private void OnDrawGizmos()
     {
     }
 }
