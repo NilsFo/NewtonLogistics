@@ -5,6 +5,10 @@ using UnityEngine;
 public class Cargo : MonoBehaviour {
     public Rigidbody2D rb;
     public Connector[] connectors;
+    public enum CargoState {
+        Free, Attached
+    }
+    public CargoState cargoState;
     // Start is called before the first frame update
     void Start()
     {

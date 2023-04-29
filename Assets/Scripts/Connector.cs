@@ -9,4 +9,22 @@ public class Connector : MonoBehaviour {
         Cargo, AttachedOutside, AttachedOutsidePulling, AttachedInside
     }
     public ConnectorState connectorState;
+
+    private void OnDrawGizmos() {
+        switch(connectorState) {
+            case ConnectorState.Cargo:
+                Gizmos.color = Color.grey;
+                break;
+            case ConnectorState.AttachedInside:
+                Gizmos.color = Color.blue;
+                break;
+            case ConnectorState.AttachedOutside:
+                Gizmos.color = Color.green;
+                break;
+            case ConnectorState.AttachedOutsidePulling:
+                Gizmos.color = Color.yellow;
+                break;
+        }
+        Gizmos.DrawSphere(transform.position, 0.1f);
+    }
 }
