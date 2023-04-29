@@ -23,11 +23,12 @@ public class GameStateBehaviourScript : MonoBehaviour
     
     public UnityEvent<int,Vector2Int> onStatsChange;
     
+    [Header("Config")]
+    [SerializeField] private int[] levelStats;
+    
     //Stats
     [Header("Stats")]
     [SerializeField] private GameState gameState = GameState.Init;
-
-    [SerializeField] private int[] levelStats;
     [SerializeField] private Vector2Int[] currentStatsArray;
     
     // misc
