@@ -33,7 +33,7 @@ public class Connector : MonoBehaviour {
         if (conRB == null)
             return false;
         Vector2 myPos = transform.position;
-        var pullPoint = conRB.ClosestPoint(myPos);
+        Vector2 pullPoint = conRB.transform.position;
         var force = (myPos - pullPoint).normalized * 1f;
         conRB.AddForceAtPosition(force, pullPoint, ForceMode2D.Impulse);
         shipRB.AddForceAtPosition(-force, myPos, ForceMode2D.Impulse);

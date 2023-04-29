@@ -37,7 +37,7 @@ public class Explosion : MonoBehaviour
         if (explosionInProgress)
         {
             float newRad = pushCollider.radius + Time.deltaTime * explosionSpeed;
-            newRad = Mathf.Max(newRad, explosionRadius);
+            newRad = Mathf.Min(newRad, explosionRadius);
             pushCollider.radius = newRad;
             if (pushCollider.radius >= explosionRadius)
             {
