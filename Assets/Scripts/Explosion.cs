@@ -16,12 +16,14 @@ public class Explosion : MonoBehaviour
 
     [Header("Expansion Settings")] private List<GameObject> alreadyExplodedObjects;
     public bool explosionInProgress;
+    public bool stopExplosionNextFrame;
     public float explosionSpeed = 1;
 
     private void Awake()
     {
         pushCollider.radius = 0.01f;
         pushCollider.enabled = false;
+        stopExplosionNextFrame = false;
     }
 
     // Start is called before the first frame update
@@ -34,6 +36,12 @@ public class Explosion : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (stopExplosionNextFrame)
+        {
+            explosionInProgress = false;
+            stopExplosionNextFrame = false;
+        }
+
         if (explosionInProgress)
         {
             float newRad = pushCollider.radius + Time.deltaTime * explosionSpeed;
@@ -41,12 +49,13 @@ public class Explosion : MonoBehaviour
             pushCollider.radius = newRad;
             if (pushCollider.radius >= explosionRadius)
             {
-                explosionInProgress = false;
+                stopExplosionNextFrame = true;
             }
         }
         else
         {
             pushCollider.radius = 0.01f;
+            stopExplosionNextFrame=false;
         }
     }
 
@@ -88,7 +97,6 @@ public class Explosion : MonoBehaviour
             impulse = impulse * (explosionMagnitude *
                                  (1.0f - explosionDistanceMultCurve.Evaluate(GetExplosionRangeProgressPercent())));
             rb.AddForce(impulse, ForceMode2D.Impulse);
-            print("explosion impulse: " + impulse);
         }
     }
 

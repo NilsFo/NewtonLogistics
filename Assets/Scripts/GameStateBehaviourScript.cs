@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -13,6 +14,7 @@ public enum GameState
 public class GameStateBehaviourScript : MonoBehaviour
 {
     //UnityEvents
+    [Header("Unity Events")]
     [SerializeField] private UnityEvent onInit;
     [SerializeField] private UnityEvent onIntro;
     [SerializeField] private UnityEvent onPause;
@@ -22,11 +24,20 @@ public class GameStateBehaviourScript : MonoBehaviour
     [SerializeField] private UnityEvent<int,Vector2Int> onStatsChange;
     
     //Stats
+    [Header("Stats")]
     [SerializeField] private GameState gameState = GameState.Init;
 
     [SerializeField] private int[] levelStats;
     [SerializeField] private Vector2Int[] currentStatsArray;
     
+    // misc
+    public ShipController player;
+
+    private void Awake()
+    {
+        player = FindObjectOfType<ShipController>();
+    }
+
     void Start()
     {
         currentStatsArray = new Vector2Int[levelStats.Length];
