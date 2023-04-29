@@ -79,6 +79,13 @@ public class ShipController : MonoBehaviour {
 
     void HandleInput() {
         var kb = Keyboard.current;
+        if (kb == null)
+        {
+            // TODO fix this
+            //FIXME fix
+            return;
+        }
+        
         _bThrustOn = _fThrustOn = _lbThrustOn = _lfThrustOn = _rbThrustOn = _rfThrustOn = false;
         if (kb.wKey.isPressed) {
             _bThrustOn = true;

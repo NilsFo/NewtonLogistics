@@ -42,19 +42,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 1029513258887818601}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ad1bb5a6005716c4cb453690e11a8002, type: 3}
+  m_Script: {fileID: 11500000, guid: 213232526b145084fbdf90631f66fd2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  explosionMagnitude: 90
-  explosionRadius: 5
-  explosionDistanceMult:
+  explosionMagnitude: 80
+  explosionRadius: 6
+  explosionDistanceMultCurve:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
       time: 0
       value: 0
-      inSlope: 2
-      outSlope: 2
+      inSlope: 0
+      outSlope: 0
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
@@ -62,8 +62,8 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 1
       value: 1
-      inSlope: 0
-      outSlope: 0
+      inSlope: 2
+      outSlope: 2
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
@@ -73,7 +73,8 @@ MonoBehaviour:
     m_RotationOrder: 4
   pushCollider: {fileID: 6524470671432208199}
   explosionInProgress: 0
-  explosionSpeed: 22
+  stopExplosionNextFrame: 0
+  explosionSpeed: 16
 --- !u!58 &6524470671432208199
 CircleCollider2D:
   m_ObjectHideFlags: 0
