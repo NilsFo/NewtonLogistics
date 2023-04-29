@@ -12,7 +12,8 @@ public class ShipController : MonoBehaviour {
 
     public Rigidbody2D rb;
     public Thruster thrusterF, thrusterB, thrusterLB, thrusterLF, thrusterRB, thrusterRF;
-        
+
+    public Connector connector;
     
     // Start is called before the first frame update
     void Start()
@@ -97,5 +98,18 @@ public class ShipController : MonoBehaviour {
         if (kb.dKey.isPressed) {
             _rbThrustOn = _lfThrustOn = true;
         }
+        if (kb.fKey.wasPressedThisFrame) {
+            TryConnecting();
+        }
     }
+
+    public void TryConnecting() {
+        var success = connector.TryConnect();
+        if (success) {
+            print("Pulling...");
+            
+        } else {
+            print("Could not pull");
+        }
+    } 
 }
