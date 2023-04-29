@@ -52,7 +52,7 @@ MonoBehaviour:
   forwardThrust: 16
   sideThrust: 4
   backwardThrust: 16
-  pullForce: 200
+  pullForce: 400
   pullDistance: 2
   rb: {fileID: 1832836480714434160}
   thrusterF: {fileID: 1832836482554939685}

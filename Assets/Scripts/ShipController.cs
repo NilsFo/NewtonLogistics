@@ -2,9 +2,12 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Random = UnityEngine.Random;
+using Vector2 = UnityEngine.Vector2;
 
 public class ShipController : MonoBehaviour {
 
@@ -17,7 +20,8 @@ public class ShipController : MonoBehaviour {
     public Thruster thrusterF, thrusterB, thrusterLB, thrusterLF, thrusterRB, thrusterRF;
 
     public List<Connector> outsideConnectors;
-    private Dictionary<Connector, Connector> _insideConnectors = new Dictionary<Connector, Connector>();
+    private static readonly int MAX_CONNECTORS = 10; 
+    private (Connector, Connector)[] _insideConnectors = new (Connector, Connector)[MAX_CONNECTORS];
     private List<(Connector, Cargo)> _nearbyConnectors = new List<(Connector, Cargo)>();
     public List<Cargo> allCargo;
     
@@ -110,6 +114,36 @@ public class ShipController : MonoBehaviour {
         if (kb.fKey.isPressed) {
             _magnetOn = true;
         }
+        if (kb.digit1Key.wasPressedThisFrame) {
+            Disconnect(0);
+        }
+        if (kb.digit2Key.wasPressedThisFrame) {
+            Disconnect(1);
+        }
+        if (kb.digit3Key.wasPressedThisFrame) {
+            Disconnect(2);
+        }
+        if (kb.digit4Key.wasPressedThisFrame) {
+            Disconnect(3);
+        }
+        if (kb.digit5Key.wasPressedThisFrame) {
+            Disconnect(4);
+        }
+        if (kb.digit6Key.wasPressedThisFrame) {
+            Disconnect(5);
+        }
+        if (kb.digit7Key.wasPressedThisFrame) {
+            Disconnect(6);
+        }
+        if (kb.digit8Key.wasPressedThisFrame) {
+            Disconnect(7);
+        }
+        if (kb.digit9Key.wasPressedThisFrame) {
+            Disconnect(8);
+        }
+        if (kb.digit0Key.wasPressedThisFrame) {
+            Disconnect(9);
+        }
     }
 
     public void UpdateNearbyConnectors() {
@@ -170,18 +204,17 @@ public class ShipController : MonoBehaviour {
             // No need to attach something already attached
             return;
         }
-        var joint = cargo.AddComponent<FixedJoint2D>();
-        cargo.gameObject.layer = LayerMask.NameToLayer("Ship");
-        joint.connectedBody = rb;
-        joint.anchor = shipConnector.transform.position;
 
         cargoConnector.connectorState = Connector.ConnectorState.AttachedInside;
         shipConnector.connectorState = Connector.ConnectorState.AttachedInside;
 
         cargo.cargoState = Cargo.CargoState.Attached;
         
+        cargo.gameObject.layer = LayerMask.NameToLayer("Ship");
+        cargo.gameObject.transform.parent = transform;
+        
         // Snap to grid
-        var relPos = transform.worldToLocalMatrix.MultiplyPoint3x4(cargo.transform.position);
+        /*var relPos = transform.worldToLocalMatrix.MultiplyPoint3x4(cargo.transform.position);
         var x = relPos.x;
         var y = relPos.y;
         x = Mathf.Round(x / 2) * 2;
@@ -189,15 +222,57 @@ public class ShipController : MonoBehaviour {
         cargo.transform.position = transform.localToWorldMatrix.MultiplyPoint3x4(new Vector2(x, y));
         var angle = cargo.transform.rotation.eulerAngles.z - transform.rotation.eulerAngles.z;
         angle = Mathf.Round(angle / 90f) * 90f;
-        //cargo.transform.rotation = Quaternion.Euler(0,0, transform.rotation.z + angle);
+        cargo.transform.rotation = Quaternion.Euler(0,0, transform.rotation.eulerAngles.z + angle);*/
 
-        _insideConnectors.Add(shipConnector, cargoConnector);
+        for (int i = 0; i < _insideConnectors.Length; i++) {
+            if (_insideConnectors [i] == (null, null)) {
+                _insideConnectors [i] = (shipConnector, cargoConnector);
+                break;
+            }
+            Debug.LogWarning("Could not connect cargo, is the maximum number of connections reached?");
+        }
         outsideConnectors.Remove(shipConnector);
         foreach (var cargoCon in cargo.connectors) {
-            cargoCon.gameObject.layer = LayerMask.NameToLayer("Ship");;
+            cargoCon.gameObject.layer = LayerMask.NameToLayer("Ship");
             if (cargoCon != cargoConnector) {
                 outsideConnectors.Add(cargoCon);
             }
         }
+        
+        var joint = cargo.AddComponent<FixedJoint2D>();
+        joint.connectedBody = rb;
+        joint.anchor = cargoConnector.transform.localPosition;
+    }
+
+    public void Disconnect(int index) {
+        // Find other links connected to this one
+        var (stayConnector, leaveConnector) = _insideConnectors [index];
+        if (stayConnector == null) {
+            Debug.Log("Can't disconnect connector " + index + ", no such connector on record");
+            return;
+        }
+        var cargo = leaveConnector.GetComponentInParent<Cargo>();
+        foreach (var cargoConnector in cargo.connectors) {
+            if (cargoConnector.connectorState == Connector.ConnectorState.AttachedInside) {
+                for (int i = 0; i < MAX_CONNECTORS; i++) {
+                    if (_insideConnectors [i].Item1 == cargoConnector) {
+                        // Disconnect down the line first
+                        Disconnect(i);
+                    }
+                }
+            }
+        }
+        cargo.transform.parent = null;
+        cargo.cargoState = Cargo.CargoState.Free;
+        Destroy(cargo.GetComponent<FixedJoint2D>());
+        foreach (var cargoConnector in cargo.connectors) {
+            cargoConnector.connectorState = Connector.ConnectorState.Cargo;
+            outsideConnectors.Remove(cargoConnector);
+        }
+        stayConnector.connectorState = Connector.ConnectorState.AttachedOutside;
+        outsideConnectors.Add(stayConnector);
+        _insideConnectors [index] = (null, null);
+        cargo.rb.AddForce((cargo.transform.position - stayConnector.transform.position).normalized * 1f, ForceMode2D.Impulse);
+        cargo.rb.AddTorque(Random.Range(-0.5f, 0.5f), ForceMode2D.Impulse);
     }
 }
