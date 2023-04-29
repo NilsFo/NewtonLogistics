@@ -49,10 +49,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 601de8475a0801246b07793c2da77815, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  forwardThrust: 8
-  sideThrust: 1
-  backwardThrust: 8
+  forwardThrust: 16
+  sideThrust: 4
+  backwardThrust: 16
   pullForce: 100
+  pullDistance: 2
   rb: {fileID: 1832836480714434160}
   thrusterF: {fileID: 1832836482554939685}
   thrusterB: {fileID: 1832836481794214957}
@@ -60,8 +61,8 @@ MonoBehaviour:
   thrusterLF: {fileID: 1832836480969071800}
   thrusterRB: {fileID: 1832836480830961082}
   thrusterRF: {fileID: 1832836481695701433}
-  outsideConnectors: []
-  insideConnectors: []
+  outsideConnectors:
+  - {fileID: 9194351530212971355}
   allCargo: []
 --- !u!50 &1832836480714434160
 Rigidbody2D:
@@ -950,6 +951,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4554456752244563000, guid: 74bb222485e7a4441a1dba797600e1e6, type: 3}
+      propertyPath: connectorState
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6407326388200090912, guid: 74bb222485e7a4441a1dba797600e1e6, type: 3}
       propertyPath: m_Name
       value: ConnectionPort
@@ -961,3 +966,14 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3567615441585450463, guid: 74bb222485e7a4441a1dba797600e1e6, type: 3}
   m_PrefabInstance: {fileID: 4660179196482637667}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &9194351530212971355 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4554456752244563000, guid: 74bb222485e7a4441a1dba797600e1e6, type: 3}
+  m_PrefabInstance: {fileID: 4660179196482637667}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d09ac37ab74295745aea6aea77916d9c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

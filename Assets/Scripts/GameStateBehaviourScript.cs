@@ -1,4 +1,5 @@
 using System;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -14,14 +15,13 @@ public enum GameState
 public class GameStateBehaviourScript : MonoBehaviour
 {
     //UnityEvents
-    [Header("Unity Events")]
-    [SerializeField] private UnityEvent onInit;
-    [SerializeField] private UnityEvent onIntro;
-    [SerializeField] private UnityEvent onPause;
-    [SerializeField] private UnityEvent onStart;
-    [SerializeField] private UnityEvent onFinish;
+    public UnityEvent onInit;
+    public UnityEvent onIntro;
+    public UnityEvent onPause;
+    public UnityEvent onStart;
+    public UnityEvent onFinish;
     
-    [SerializeField] private UnityEvent<int,Vector2Int> onStatsChange;
+    public UnityEvent<int,Vector2Int> onStatsChange;
     
     //Stats
     [Header("Stats")]
@@ -36,10 +36,7 @@ public class GameStateBehaviourScript : MonoBehaviour
     private void Awake()
     {
         player = FindObjectOfType<ShipController>();
-    }
-
-    void Start()
-    {
+        
         currentStatsArray = new Vector2Int[levelStats.Length];
         
         for (int i = 0; i < levelStats.Length; i++) 
@@ -60,8 +57,11 @@ public class GameStateBehaviourScript : MonoBehaviour
         
         if (onStatsChange == null)
             onStatsChange = new UnityEvent<int, Vector2Int>();
-        
-        ChangeToInit();
+    }
+
+    void Start()
+    {
+        ChangeToStart();
     }
 
     public GameState CurrentGameState => gameState;
@@ -80,31 +80,48 @@ public class GameStateBehaviourScript : MonoBehaviour
     {
         return currentStatsArray[index];
     }
-    
-    public bool AddPoints(int index)
+
+    public Vector2Int[] GetStatsArray()
     {
+        return currentStatsArray;
+    }
+
+    public bool SetPoints(int index, int points)
+    {
+        int currentPoints = points;
         if (currentStatsArray[index][0] >= currentStatsArray[index][1])
         {
             //Max Points reached! try to add more Points than possible!
-            Debug.LogError("Trying to add more Points than possible!");
-            return false;
+            currentPoints = currentStatsArray[index][1];
         }
-        currentStatsArray[index][0]++;
-        onStatsChange.Invoke(index, currentStatsArray[index]);
-        return true;
-    }
-    
-    public bool RemovePoints(int index)
-    {
         if (currentStatsArray[index][0] <= 0)
         {
             //Min Points reached! try to remove more Points than possible!
-            Debug.LogError("Trying to remove more Points than possible!");
-            return false;
+            currentPoints = 0;
         }
-        currentStatsArray[index][0]--;
+        currentStatsArray[index][0] = currentPoints;
         onStatsChange.Invoke(index, currentStatsArray[index]);
+        CheckPointCompleteness();
         return true;
+    }
+
+    private void CheckPointCompleteness()
+    {
+        bool isComplet = true;
+        for (int i = 0; i < currentStatsArray.Length; i++)
+        {
+            Vector2Int stats = currentStatsArray[i];
+            if (stats[0] != stats[1])
+            {
+                isComplet = false;
+                break;
+            }
+        }
+
+        if (isComplet)
+        {
+            this.ChangeToFinish();
+        }
     }
     
     #region EventFunctions
