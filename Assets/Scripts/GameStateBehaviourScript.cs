@@ -23,11 +23,12 @@ public class GameStateBehaviourScript : MonoBehaviour
     
     public UnityEvent<int,Vector2Int> onStatsChange;
     
+    [Header("Config")]
+    [SerializeField] private int[] levelStats;
+    
     //Stats
     [Header("Stats")]
     [SerializeField] private GameState gameState = GameState.Init;
-
-    [SerializeField] private int[] levelStats;
     [SerializeField] private Vector2Int[] currentStatsArray;
     
     // misc
@@ -89,12 +90,12 @@ public class GameStateBehaviourScript : MonoBehaviour
     public bool SetPoints(int index, int points)
     {
         int currentPoints = points;
-        if (currentStatsArray[index][0] >= currentStatsArray[index][1])
+        if (currentPoints >= currentStatsArray[index][1])
         {
             //Max Points reached! try to add more Points than possible!
             currentPoints = currentStatsArray[index][1];
         }
-        if (currentStatsArray[index][0] <= 0)
+        if (currentPoints <= 0)
         {
             //Min Points reached! try to remove more Points than possible!
             currentPoints = 0;

@@ -6,7 +6,6 @@ using UnityEngine;
 
 public class DumpableBehaviourScript : MonoBehaviour
 {
-
     [SerializeField] private BoxCollider2D boxCollider2D;
     [SerializeField] private Rigidbody2D rigidbody2D;
     [SerializeField] private TextMeshProUGUI textLabel;
@@ -19,7 +18,7 @@ public class DumpableBehaviourScript : MonoBehaviour
 
     public Vector2 GetPointOfIntrest()
     {
-        return boxCollider2D.offset;
+        return rigidbody2D.worldCenterOfMass;
     }
 
     public int DumpStationIndex => dumpStationIndex;
