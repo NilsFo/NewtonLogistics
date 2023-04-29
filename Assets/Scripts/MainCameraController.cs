@@ -8,6 +8,8 @@ public class MainCameraController : MonoBehaviour
     private GameStateBehaviourScript _gameState;
     private CinemachineBrain cmBrain;
     public GameObject cameraFollow;
+    public GameObject cameraObj;
+    public Transform CameraPos => cameraObj.transform;
 
     // Start is called before the first frame update
     void Start()
@@ -21,4 +23,6 @@ public class MainCameraController : MonoBehaviour
     {
         cameraFollow.transform.position = _gameState.player.transform.position;
     }
+
+
 }
