@@ -396,6 +396,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a7f70fdf9cf1fc143bc62b7e78809c55, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pos: {fileID: 8629260295490334285}
   boxCollider2D: {fileID: 8629260295490334386}
   rigidbody2D: {fileID: 8629260295490334387}
   textLabel: {fileID: 8435577933523370555}

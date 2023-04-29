@@ -63,7 +63,7 @@ public class DumpStationBehaviourScript : MonoBehaviour
         {
             for (int i = 0; i < listOfInTriggerWrongDump.Count; i++)
             {
-                DumpableBehaviourScript dumpForPush = listOfInTrigger[i];
+                DumpableBehaviourScript dumpForPush = listOfInTriggerWrongDump[i];
                 Rigidbody2D rigidbody2D = dumpForPush.Rigidbody2D;
                 
                 Vector2 direction = rigidbody2D.position - (Vector2) myCollider2D.bounds.center;
@@ -101,5 +101,6 @@ public class DumpStationBehaviourScript : MonoBehaviour
         listOfInTrigger.Remove(dumpableBehaviourScript);
         listOfOverlapCenterMass.Remove(dumpableBehaviourScript);
         listOfInTriggerWrongDump.Remove(dumpableBehaviourScript);
+        gameState.SetPoints(stationIndex, listOfOverlapCenterMass.Count);
     }
 }
