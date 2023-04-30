@@ -33,6 +33,13 @@ public class MissionIntroBehaviourScript : MonoBehaviour
             if(level == GameLevel.One){
                 PlayIntroLevelOne();
             }
+            else
+            {
+                gameState.ChangeGameState(GameState.Start);
+                inPlaying = false;
+                introTime = 0f;
+                currentTime = 0f;
+            }
         }
     }
 
