@@ -98,6 +98,7 @@ GameObject:
   - component: {fileID: 3238917468920190974}
   - component: {fileID: 8629260295490334387}
   - component: {fileID: 8629260295490334386}
+  - component: {fileID: 3551884482036028575}
   m_Layer: 6
   m_Name: Container
   m_TagString: Untagged
@@ -237,6 +238,24 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 4, y: 2}
   m_EdgeRadius: 0
+--- !u!114 &3551884482036028575
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8629260295490334284}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6402c9af75c2b804ebff18f995418cb0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playSound: 1
+  impactSound: {fileID: 8300000, guid: 0d40e3afa3a3cf040ab4fd4f90ccbfb6, type: 3}
+  volumeMult: 1
+  showParticles: 0
+  particleColor: {r: 0, g: 0, b: 0, a: 0}
+  impactParticlePrefab: {fileID: 0}
 --- !u!1001 &575626908683439019
 PrefabInstance:
   m_ObjectHideFlags: 0
