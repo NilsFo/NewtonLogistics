@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Numerics;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -230,7 +229,7 @@ public class ShipController : MonoBehaviour {
         cargo.cargoState = Cargo.CargoState.Attached;
         
         cargo.gameObject.layer = LayerMask.NameToLayer("Ship");
-        cargo.gameObject.transform.parent = transform;
+        cargo.transform.parent = shipConnector.transform.parent;
         
         // Snap to grid
         /*var relPos = transform.worldToLocalMatrix.MultiplyPoint3x4(cargo.transform.position);
@@ -238,11 +237,12 @@ public class ShipController : MonoBehaviour {
         var y = relPos.y;
         x = Mathf.Round(x / 2) * 2;
         y = Mathf.Round(y / 2) * 2;
-        cargo.transform.position = transform.localToWorldMatrix.MultiplyPoint3x4(new Vector2(x, y));
+        //cargo.transform.position = transform.localToWorldMatrix.MultiplyPoint3x4(new Vector2(x, y));
         var angle = cargo.transform.rotation.eulerAngles.z - transform.rotation.eulerAngles.z;
         angle = Mathf.Round(angle / 90f) * 90f;
-        cargo.transform.rotation = Quaternion.Euler(0,0, transform.rotation.eulerAngles.z + angle);*/
-
+        //cargo.transform.rotation = Quaternion.Euler(0,0, transform.rotation.eulerAngles.z + angle);
+        cargo.rb.SetRotation(angle);
+        cargo.rb.MovePosition(transform.localToWorldMatrix.MultiplyPoint3x4(new Vector2(x, y)));*/
         
         outsideConnectors.Remove(shipConnector);
         foreach (var cargoCon in cargo.connectors) {
@@ -251,18 +251,19 @@ public class ShipController : MonoBehaviour {
                 outsideConnectors.Add(cargoCon);
             }
         }
-        
+       
+        var shipRB = shipConnector.GetComponentInParent<Rigidbody2D>();
         var joint = cargo.AddComponent<HingeJoint2D>();
         joint.autoConfigureConnectedAnchor = false;
-        joint.connectedBody = shipConnector.GetComponentInParent<Rigidbody2D>();
+        joint.connectedBody = shipRB;
         joint.anchor = cargoConnector.transform.localPosition;
         joint.connectedAnchor = shipConnector.transform.localPosition;
+        float conZ = shipConnector.transform.localRotation.z;
         joint.limits = new JointAngleLimits2D() {
-            min = -3f, max = 3f
+            min = -2f+conZ, max = 2f+conZ
         };
         joint.useLimits = true;
 
-        
         connectedCargo.Add(cargo);
         gameState.cameraController.AddFollowTarget(cargo.gameObject);
     }
