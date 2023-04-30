@@ -164,3 +164,8 @@ MonoBehaviour:
   showParticles: 1
   particleColor: {r: 0.454902, g: 0.627451, b: 0.8196079, a: 1}
   impactParticlePrefab: {fileID: 473678605313508382, guid: 3128d208d5a807244ab69d5ad208cb78, type: 3}
+  particleScale: 0.565
+  cameraShake: 1
+  shakeTime: 0.5
+  shakeAmplitude: 1
+  shakeFrequency: 1

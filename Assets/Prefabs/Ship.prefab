@@ -152,6 +152,8 @@ MonoBehaviour:
   showParticles: 1
   particleColor: {r: 0.6392157, g: 0.5764706, b: 0.5686275, a: 1}
   impactParticlePrefab: {fileID: 473678605313508382, guid: 3128d208d5a807244ab69d5ad208cb78, type: 3}
+  particleScale: 1
+  shakeEnabled: 1
 --- !u!1 &1832836480830961031
 GameObject:
   m_ObjectHideFlags: 0

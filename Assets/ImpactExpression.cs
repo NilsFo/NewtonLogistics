@@ -15,6 +15,9 @@ public class ImpactExpression : MonoBehaviour
     public Color particleColor;
     public GameObject impactParticlePrefab;
     private float particleCooldown = 0f;
+    [Range(0, 2)] public float particleScale = 1.0f;
+
+    [Header("Camera Shake")] public bool shakeEnabled=false;
 
     private GameStateBehaviourScript _gameStateBehaviourScript;
 
@@ -52,14 +55,20 @@ public class ImpactExpression : MonoBehaviour
 
         if (showParticles && particleCooldown < 0)
         {
-            print("showing particles from: " + gameObject.name);
             var particles = Instantiate(impactParticlePrefab);
             particles.transform.position = contactPosition;
             ParticleSystem system = particles.GetComponent<ParticleSystem>();
             var main = system.main;
             main.startColor = particleColor;
 
+            particles.transform.localScale = new Vector3(1, 1, particleScale);
+
             particleCooldown = Time.fixedDeltaTime;
+        }
+
+        if (shakeEnabled)
+        {
+            _gameStateBehaviourScript.cameraController.ShakeCamera(8,4,0.69f);
         }
     }
 }

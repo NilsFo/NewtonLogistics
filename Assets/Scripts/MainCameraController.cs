@@ -13,6 +13,7 @@ public class MainCameraController : MonoBehaviour
     public Transform CameraPos => cameraObj.transform;
     public GameObject secretFollowObj;
     private Camera camera;
+    private CinemachineBasicMultiChannelPerlin noise;
 
     [Header("Who to look at?")] public List<GameObject> followList;
 
@@ -28,12 +29,19 @@ public class MainCameraController : MonoBehaviour
     public float orthographicZoomSpeedPlayerRequest = 4.0f;
     public bool playerRequestsZoomOut;
 
+    [Header("Camera Shake")] public float cameraShakeDuration = 0f;
+    private float _cameraShakeDurationTimer = 0f;
+    public float amplitudeGainTarget = 0;
+    public float frequencyGainTarget = 0;
+    public float cameraShakeResetSpeed = 2f;
+
     // Start is called before the first frame update
     void Start()
     {
         _gameState = FindObjectOfType<GameStateBehaviourScript>();
         defaultZ = transform.position.z;
         orthographicZoomScaleCurrent = orthographicZoomScaleDefault;
+        ResetShake();
 
         if (followList == null)
         {
@@ -51,7 +59,25 @@ public class MainCameraController : MonoBehaviour
         if (virtualCamera != null)
         {
             zoomMinNear = virtualCamera.m_Lens.OrthographicSize;
+            noise = virtualCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
         }
+    }
+
+    public void ShakeCamera(float amplitudeGain, float frequencyGain, float duration)
+    {
+        if (amplitudeGainTarget < amplitudeGain || frequencyGainTarget < frequencyGain)
+        {
+            cameraShakeDuration = duration;
+            amplitudeGainTarget = Mathf.Max(amplitudeGainTarget, frequencyGain);
+            frequencyGainTarget = Mathf.Max(frequencyGainTarget, amplitudeGain);
+        }
+    }
+
+    public void ResetShake()
+    {
+        amplitudeGainTarget = 0;
+        frequencyGainTarget = 0;
+        _cameraShakeDurationTimer = 0;
     }
 
     // Update is called once per frame
@@ -66,6 +92,26 @@ public class MainCameraController : MonoBehaviour
 
         // input
         playerRequestsZoomOut = Keyboard.current.tabKey.isPressed;
+
+        // Shake
+        if (cameraShakeDuration > 0)
+        {
+            _cameraShakeDurationTimer += Time.deltaTime;
+        }
+
+        if (amplitudeGainTarget <= 0 || frequencyGainTarget <= 0 || _cameraShakeDurationTimer >= cameraShakeDuration)
+        {
+            ResetShake();
+        }
+
+        if (noise != null)
+        {
+            print("amp: "+amplitudeGainTarget+" - freq: " + frequencyGainTarget);
+            noise.m_AmplitudeGain = Mathf.Lerp(noise.m_AmplitudeGain, amplitudeGainTarget,
+                Time.deltaTime * cameraShakeResetSpeed);
+            noise.m_FrequencyGain = Mathf.Lerp(noise.m_FrequencyGain, amplitudeGainTarget,
+                Time.deltaTime * cameraShakeResetSpeed);
+        }
 
         // Moving & Zooming Camera
         if (virtualCamera != null)
