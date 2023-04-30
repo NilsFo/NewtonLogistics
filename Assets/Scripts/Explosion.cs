@@ -15,6 +15,8 @@ public class Explosion : MonoBehaviour
 
     public CircleCollider2D pushCollider;
 
+    private GameStateBehaviourScript _gameStateBehaviourScript;
+
     [Header("Expansion Settings")] private List<GameObject> alreadyExplodedObjects;
     public bool explosionInProgress;
     public bool stopExplosionNextFrame;
@@ -32,6 +34,7 @@ public class Explosion : MonoBehaviour
     {
         explosionInProgress = false;
         alreadyExplodedObjects = new List<GameObject>();
+        _gameStateBehaviourScript = FindObjectOfType<GameStateBehaviourScript>();
     }
 
     // Update is called once per frame
@@ -41,6 +44,7 @@ public class Explosion : MonoBehaviour
         {
             explosionInProgress = false;
             stopExplosionNextFrame = false;
+            _gameStateBehaviourScript.cameraController.RemoveFollowTarget(gameObject);
             Destroy(gameObject);
         }
 
@@ -57,17 +61,18 @@ public class Explosion : MonoBehaviour
         else
         {
             pushCollider.radius = 0.01f;
-            stopExplosionNextFrame=false;
+            stopExplosionNextFrame = false;
         }
     }
 
     [ContextMenu("Explode now")]
     public void Explode()
     {
-        print("KABLOOOIE!");
         explosionInProgress = true;
         pushCollider.enabled = true;
         alreadyExplodedObjects = new List<GameObject>();
+
+        _gameStateBehaviourScript.cameraController.AddFollowTarget(gameObject);
     }
 
     private void OnDrawGizmos()
@@ -110,7 +115,6 @@ public class Explosion : MonoBehaviour
         {
             alreadyExplodedObjects.Add(gm);
             PushObject(gm);
-            print("explosion detected: " + other.gameObject.name);
         }
     }
 }

@@ -33,10 +33,12 @@ public class GameStateBehaviourScript : MonoBehaviour
     
     // misc
     public ShipController player;
+    public MainCameraController cameraController;
 
     private void Awake()
     {
         player = FindObjectOfType<ShipController>();
+        cameraController = FindObjectOfType<MainCameraController>();
         
         currentStatsArray = new Vector2Int[levelStats.Length];
         
