@@ -203,12 +203,23 @@ public class ShipController : MonoBehaviour {
             tempConnectors.Add((outsideCon, cargoCon));
         }
         _nearbyConnectors = tempConnectors;
+        
+        // Check for broken hinges
+        for (var index = _insideConnectors.Length - 1; index >= 0; index--) {
+            var (stayConnector, leaveConnector) = _insideConnectors [index];
+            if(stayConnector == null)
+                continue;
+            if(leaveConnector.GetComponentInParent<FixedJoint2D>() == null)
+                Disconnect(index);
+        }
     }
 
     public void PullConnectors() {
         List<Cargo> cargoBeingPulled = new List<Cargo>();
         foreach (var (shipConnector, cargoConnector) in _nearbyConnectors) {
             var cargo = cargoConnector.GetComponentInParent<Cargo>();
+            if(cargo.cargoState == Cargo.CargoState.Attached)
+                continue;
 
             Vector2 delta = shipConnector.transform.position - cargoConnector.transform.position;
             var distance = delta.magnitude;
@@ -218,6 +229,9 @@ public class ShipController : MonoBehaviour {
                 var modPullForce = pullForce * (1 - (-1 + distance) / pullDistance) * (1 - (-1 + distance) / pullDistance);
                 cargo.rb.AddForceAtPosition(Time.fixedDeltaTime * modPullForce * delta, cargoConnector.transform.position);
                 rb.AddForceAtPosition(Time.fixedDeltaTime * modPullForce * -delta, shipConnector.transform.position);
+                Vector2 cargoConNormal = -cargoConnector.transform.right;
+                Vector2 shipConNormal = shipConnector.transform.right;
+                rb.AddTorque(Vector2.SignedAngle(cargoConNormal, shipConNormal));
                 Debug.DrawLine(cargoConnector.transform.position, shipConnector.transform.position, Color.yellow, Time.fixedDeltaTime);
                 shipConnector.connectorState = Connector.ConnectorState.AttachedOutsidePulling;
                 cargoBeingPulled.Add(cargo);
@@ -260,17 +274,24 @@ public class ShipController : MonoBehaviour {
         cargo.transform.parent = shipConnector.transform.parent;
         
         // Snap to grid
-        /*var relPos = transform.worldToLocalMatrix.MultiplyPoint3x4(cargo.transform.position);
+        var relPos = transform.worldToLocalMatrix.MultiplyPoint3x4(cargo.transform.position);
         var x = relPos.x;
         var y = relPos.y;
         x = Mathf.Round(x / 2) * 2;
         y = Mathf.Round(y / 2) * 2;
+        cargo.rb.MovePosition(transform.localToWorldMatrix.MultiplyPoint3x4(new Vector2(x, y)));
         //cargo.transform.position = transform.localToWorldMatrix.MultiplyPoint3x4(new Vector2(x, y));
-        var angle = cargo.transform.rotation.eulerAngles.z - transform.rotation.eulerAngles.z;
+        print(cargo.rb.rotation);
+        var angle = cargo.rb.rotation - shipConnector.transform.rotation.eulerAngles.z;
+        
+        print(angle);
         angle = Mathf.Round(angle / 90f) * 90f;
+        
+        print(angle);
         //cargo.transform.rotation = Quaternion.Euler(0,0, transform.rotation.eulerAngles.z + angle);
-        cargo.rb.SetRotation(angle);
-        cargo.rb.MovePosition(transform.localToWorldMatrix.MultiplyPoint3x4(new Vector2(x, y)));*/
+        cargo.rb.SetRotation(angle + shipConnector.transform.rotation.eulerAngles.z);
+        
+        print(angle + shipConnector.transform.rotation.eulerAngles.z);
         
         outsideConnectors.Remove(shipConnector);
         foreach (var cargoCon in cargo.connectors) {
@@ -281,16 +302,20 @@ public class ShipController : MonoBehaviour {
         }
        
         var shipRB = shipConnector.GetComponentInParent<Rigidbody2D>();
-        var joint = cargo.AddComponent<HingeJoint2D>();
+        var joint = cargo.AddComponent<FixedJoint2D>();
         joint.autoConfigureConnectedAnchor = false;
         joint.connectedBody = shipRB;
         joint.anchor = cargoConnector.transform.localPosition;
         joint.connectedAnchor = shipConnector.transform.localPosition;
-        float conZ = shipConnector.transform.localRotation.z;
-        joint.limits = new JointAngleLimits2D() {
-            min = -2f+conZ, max = 2f+conZ
-        };
-        joint.useLimits = true;
+        joint.frequency = 10f;
+        joint.dampingRatio = 0.5f;
+        joint.breakForce = 10000f;
+        joint.breakTorque = 10000f;
+        //float conZ = shipConnector.transform.localRotation.z;
+        // joint.limits = new JointAngleLimits2D() {
+        //     min = -2f+conZ, max = 2f+conZ
+        // };
+        // joint.useLimits = true;
 
         connectedCargo.Add(cargo);
         gameState.cameraController.AddFollowTarget(cargo.gameObject);
@@ -317,7 +342,7 @@ public class ShipController : MonoBehaviour {
         cargo.transform.parent = null;
         cargo.gameObject.layer = LayerMask.NameToLayer("Cargo");
         cargo.cargoState = Cargo.CargoState.Free;
-        Destroy(cargo.GetComponent<HingeJoint2D>());
+        Destroy(cargo.GetComponent<FixedJoint2D>());
         foreach (var cargoConnector in cargo.connectors) {
             cargoConnector.connectorState = Connector.ConnectorState.Cargo;
             cargoConnector.gameObject.layer = LayerMask.NameToLayer("Cargo");
@@ -326,8 +351,8 @@ public class ShipController : MonoBehaviour {
         stayConnector.connectorState = Connector.ConnectorState.AttachedOutside;
         outsideConnectors.Add(stayConnector);
         _insideConnectors [index] = (null, null);
-        cargo.rb.AddForce((cargo.transform.position - stayConnector.transform.position).normalized * 1f, ForceMode2D.Impulse);
-        cargo.rb.AddTorque(Random.Range(-0.5f, 0.5f), ForceMode2D.Impulse);
+        cargo.rb.AddForce((cargo.transform.position - stayConnector.transform.position).normalized * 2f, ForceMode2D.Impulse);
+        cargo.rb.AddTorque(Random.Range(-1f, 1f), ForceMode2D.Impulse);
 
         connectedCargo.Remove(cargo);
         gameState.cameraController.RemoveFollowTarget(cargo.gameObject);
