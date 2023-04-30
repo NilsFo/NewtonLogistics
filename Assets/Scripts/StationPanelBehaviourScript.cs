@@ -16,6 +16,9 @@ public class StationPanelBehaviourScript : MonoBehaviour
     
     [SerializeField] private int currentState = 0;
     [SerializeField] private int maxState = 0;
+
+    [SerializeField] private Sprite offSprite;
+    [SerializeField] private Sprite onSprite;
     
     public void Init(int index, int currentState, int maxState)
     {
@@ -34,11 +37,11 @@ public class StationPanelBehaviourScript : MonoBehaviour
         {
             if (i < currentState)
             {
-               images[i].color = Color.green; 
+                images[i].sprite = onSprite;
             }
             else
             {
-                images[i].color = Color.red; 
+                images[i].sprite = offSprite; 
             }
         }
     }
