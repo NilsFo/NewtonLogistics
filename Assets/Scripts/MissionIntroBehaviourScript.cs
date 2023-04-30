@@ -41,7 +41,7 @@ public class MissionIntroBehaviourScript : MonoBehaviour
             if (currentTime < introTime)
             {
                 //TODO Trigger Phase form Stack
-                introTime += Time.deltaTime;
+                currentTime += Time.deltaTime;
             }
             else if(currentTime >= introTime)
             {
@@ -54,7 +54,7 @@ public class MissionIntroBehaviourScript : MonoBehaviour
     private void PlayIntroLevelOne()
     {
         inPlaying = true;
-        introTime = 15f;
+        introTime = 5f;
         //TODO Phase 1..X based on Time
     }
 }

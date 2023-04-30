@@ -74,7 +74,7 @@ public class GameStateBehaviourScript : MonoBehaviour
     {
         if (gameState == GameState.Init)
         {
-            ChangeGameState(GameState.Start);
+            ChangeGameState(GameState.Intro);
         }
     }
 
@@ -226,7 +226,6 @@ public class GameStateBehaviourScript : MonoBehaviour
 
     public void ChangeGameLevelAndGameState(GameLevel level, GameState state)
     {
-        Debug.Log(level + " " + state);
         gameLevel = level;
         gameState = state;
         onGameStateChange.Invoke(gameLevel, gameState);

@@ -228,6 +228,7 @@ MonoBehaviour:
   boxCollider2D: {fileID: 8629260295490334386}
   rigidbody2D: {fileID: 8629260295490334387}
   spriteRenderer: {fileID: 8629260293993371693}
+  cargo: {fileID: 939697907216998947}
   dumpStationIndex: 0
   defaultSprite: {fileID: 21300000, guid: fd187db988116f74686804486d457835, type: 3}
   sprites:

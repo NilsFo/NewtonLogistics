@@ -10,6 +10,7 @@ public class DumpableBehaviourScript : MonoBehaviour
     [SerializeField] private BoxCollider2D boxCollider2D;
     [SerializeField] private Rigidbody2D rigidbody2D;
     [SerializeField] private SpriteRenderer spriteRenderer;
+    [SerializeField] private Cargo cargo;
     
     [SerializeField] private int dumpStationIndex;
 
@@ -34,7 +35,6 @@ public class DumpableBehaviourScript : MonoBehaviour
     public BoxCollider2D BoxCollider2D => boxCollider2D;
 
     public Rigidbody2D Rigidbody2D => rigidbody2D;
-    
-    
-    
+
+    public Cargo Cargo => cargo;
 }
