@@ -17,6 +17,7 @@ public class ShipController : MonoBehaviour {
 
     public Rigidbody2D rb;
     public Thruster thrusterF, thrusterB, thrusterLB, thrusterLF, thrusterRB, thrusterRF;
+    public ParticleSystem thrusterParticlesF1,thrusterParticlesF2, thrusterParticlesB, thrusterParticlesLB, thrusterParticlesLF, thrusterParticlesRB, thrusterParticlesRF;
 
     public List<Connector> outsideConnectors;
     private static readonly int MAX_CONNECTORS = 10; 
@@ -30,6 +31,7 @@ public class ShipController : MonoBehaviour {
     void Start() {
         gameState = FindObjectOfType<GameStateBehaviourScript>();
         InvokeRepeating(nameof(UpdateNearbyConnectors), 0.1f, 0.1f);
+        StopAllEmissions();
     }
 
     // Update is called once per frame
@@ -94,23 +96,36 @@ public class ShipController : MonoBehaviour {
     void HandleInput() {
         var kb = Keyboard.current;
         _bThrustOn = _fThrustOn = _lbThrustOn = _lfThrustOn = _rbThrustOn = _rfThrustOn = _magnetOn = false;
+        StopAllEmissions();
+        
         if (kb.wKey.isPressed) {
             _bThrustOn = true;
+            StartEmission(thrusterParticlesB);
         }
         if (kb.sKey.isPressed) {
             _fThrustOn = true;
+            StartEmission(thrusterParticlesF1);
+            StartEmission(thrusterParticlesF2);
         }
         if (kb.eKey.isPressed) {
             _rbThrustOn = _rfThrustOn = true;
+            StartEmission(thrusterParticlesRF);
+            StartEmission(thrusterParticlesRB);
         }
         if (kb.qKey.isPressed) {
             _lbThrustOn = _lfThrustOn = true;
+            StartEmission(thrusterParticlesLB);
+            StartEmission(thrusterParticlesLF);
         }
         if (kb.aKey.isPressed) {
             _rfThrustOn = _lbThrustOn = true;
+            StartEmission(thrusterParticlesLB);
+            StartEmission(thrusterParticlesRF);
         }
         if (kb.dKey.isPressed) {
             _rbThrustOn = _lfThrustOn = true;
+            StartEmission(thrusterParticlesRB);
+            StartEmission(thrusterParticlesLF);
         }
         if (kb.fKey.isPressed || kb.spaceKey.isPressed) {
             _magnetOn = true;
@@ -316,6 +331,32 @@ public class ShipController : MonoBehaviour {
 
         connectedCargo.Remove(cargo);
         gameState.cameraController.RemoveFollowTarget(cargo.gameObject);
+    }
+
+    public void StopAllEmissions()
+    {
+        ParticleSystem.EmissionModule e;
+
+        e = thrusterParticlesF1.emission;
+        e.enabled = false;
+         e = thrusterParticlesF2.emission;
+         e.enabled=false;
+           e = thrusterParticlesB.emission;
+           e.enabled=false;
+             e = thrusterParticlesLB.emission;
+             e.enabled=false;
+               e = thrusterParticlesLF.emission;
+               e.enabled=false;
+                 e = thrusterParticlesRB.emission;
+                 e.enabled=false;
+                   e = thrusterParticlesRF.emission;
+                   e.enabled=false;
+                        }
+
+    public void StartEmission(ParticleSystem ps)
+    {
+        var e = ps.emission;
+        e.enabled = true;
     }
 
 }

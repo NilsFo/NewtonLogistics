@@ -43,6 +43,7 @@ public class GameStateBehaviourScript : MonoBehaviour
     // misc
     public ShipController player;
     public MainCameraController cameraController;
+    public MusicManager musicManager;
     
     //privates
     private DumpableBehaviourScript[] listOfDump;
@@ -52,6 +53,7 @@ public class GameStateBehaviourScript : MonoBehaviour
     {
         player = FindObjectOfType<ShipController>();
         cameraController = FindObjectOfType<MainCameraController>();
+        musicManager = FindObjectOfType<MusicManager>();
         
         if (onGameStateChange == null)
             onGameStateChange = new UnityEvent<GameLevel, GameState>();
@@ -68,6 +70,7 @@ public class GameStateBehaviourScript : MonoBehaviour
     {
         FindAllDumpStations();
         FindAllDumpable();
+        musicManager.PlaySongLoop();
         ChangeGameLevelAndGameState(gameLevel, gameState);
     }
 
