@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 5674796585941996273}
   - component: {fileID: 1569989106139512971}
   - component: {fileID: 6183422454222902820}
+  - component: {fileID: 9078330321350535183}
   m_Layer: 0
   m_Name: Small Meteor
   m_TagString: Untagged
@@ -123,3 +124,24 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &9078330321350535183
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5342312425647135157}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6402c9af75c2b804ebff18f995418cb0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playSound: 0
+  impactSound: {fileID: 8300000, guid: e96e1fd56531173419720b9f9c61755d, type: 3}
+  volumeMult: 1
+  respectBinning: 1
+  showParticles: 1
+  particleColor: {r: 0.76470596, g: 0.72156864, b: 0.69411767, a: 1}
+  impactParticlePrefab: {fileID: 308562791995608323, guid: c22e1bd3a3f467b4683942c729709f6a, type: 3}
+  particleScale: 1
+  shakeEnabled: 0
