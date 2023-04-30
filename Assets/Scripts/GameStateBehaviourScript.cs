@@ -80,6 +80,11 @@ public class GameStateBehaviourScript : MonoBehaviour
         {
             ChangeGameState(GameState.Intro);
         }
+
+        if (gameState == GameState.Finish)
+        {
+            ChangeGameLevelAndGameState(NextLevel(),GameState.Init);
+        }
     }
 
     public GameState CurrentGameState => gameState;
@@ -150,32 +155,32 @@ public class GameStateBehaviourScript : MonoBehaviour
 
     private GameLevel NextLevel()
     {
-        if (gameLevel != GameLevel.None)
+        if (gameLevel == GameLevel.None)
         {
             return GameLevel.One;
         }
         
-        if (gameLevel != GameLevel.One)
+        if (gameLevel == GameLevel.One)
         {
             return GameLevel.Two;
         }
         
-        if (gameLevel != GameLevel.Two)
+        if (gameLevel == GameLevel.Two)
         {
             return GameLevel.Three;
         }
         
-        if (gameLevel != GameLevel.Three)
+        if (gameLevel == GameLevel.Three)
         {
             return GameLevel.Four;
         }
         
-        if (gameLevel != GameLevel.Four)
+        if (gameLevel == GameLevel.Four)
         {
             return GameLevel.Done;
         }
 
-        return gameLevel;
+        return GameLevel.Done;
     }
     
     private void FindAllDumpable()
