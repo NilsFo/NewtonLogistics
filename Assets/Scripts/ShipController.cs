@@ -21,7 +21,7 @@ public class ShipController : MonoBehaviour {
     public List<Connector> outsideConnectors;
     private static readonly int MAX_CONNECTORS = 10; 
     private (Connector, Connector)[] _insideConnectors = new (Connector, Connector)[MAX_CONNECTORS];
-    private List<(Connector, Cargo)> _nearbyConnectors = new List<(Connector, Cargo)>();
+    private List<(Connector, Connector)> _nearbyConnectors = new List<(Connector, Connector)>();
     public List<Cargo> connectedCargo = new List<Cargo>();
 
     private GameStateBehaviourScript gameState;
@@ -29,6 +29,7 @@ public class ShipController : MonoBehaviour {
     // Start is called before the first frame update
     void Start() {
         gameState = FindObjectOfType<GameStateBehaviourScript>();
+        InvokeRepeating(nameof(UpdateNearbyConnectors), 0.1f, 0.1f);
     }
 
     // Update is called once per frame
@@ -77,7 +78,6 @@ public class ShipController : MonoBehaviour {
             Debug.DrawLine(pos, pos + dir, Color.red, Time.fixedDeltaTime);
         }
         if (_magnetOn) {
-            UpdateNearbyConnectors();
             PullConnectors();
         }
     }
@@ -148,53 +148,65 @@ public class ShipController : MonoBehaviour {
     }
 
     public void UpdateNearbyConnectors() {
-        _nearbyConnectors.Clear();
         var contactFilter = new ContactFilter2D() {
             layerMask = LayerMask.GetMask("Cargo")
         };
+        _nearbyConnectors.Clear();
         List<Collider2D> results = new List<Collider2D>();
         foreach (var outsideCon in outsideConnectors) {
-            outsideCon.connectorState = Connector.ConnectorState.AttachedOutside;
+            if(!_magnetOn)
+                outsideCon.connectorState = Connector.ConnectorState.AttachedOutside;
             results.Clear();
             outsideCon.connectorTrigger.OverlapCollider(contactFilter, results);
             if (results.Count > 0) {
                 foreach (var col in results) {
                     var cargo = col.GetComponent<Cargo>();
-                    if(cargo != null && cargo.cargoState == Cargo.CargoState.Free)
-                        _nearbyConnectors.Add((outsideCon, cargo));
+                    if (cargo != null && cargo.cargoState == Cargo.CargoState.Free) {
+                        foreach (var cargoConnector in cargo.connectors) {
+                            if((cargoConnector.transform.position - outsideCon.transform.position).magnitude <= pullDistance)
+                                _nearbyConnectors.Add((outsideCon, cargoConnector));
+                        }
+                    }
                 }
             }
         }
+        
+        _nearbyConnectors = _nearbyConnectors.OrderBy(tuple => (tuple.Item1.transform.position - tuple.Item2.transform.position).magnitude).ToList();
+        List<Connector> connectorsOccupied = new List<Connector>();
+        List<Cargo> cargoOccupied = new List<Cargo>();
+        List<(Connector, Connector)> tempConnectors = new List<(Connector, Connector)>();
+        foreach (var (outsideCon, cargoCon) in _nearbyConnectors) {
+            var cargo = cargoCon.GetComponentInParent<Cargo>();
+            if (connectorsOccupied.Contains(outsideCon) || cargoOccupied.Contains(cargo)) {
+                continue;
+            }
+            if(outsideCon.connectorState != Connector.ConnectorState.AttachedOutsidePulling)
+                outsideCon.connectorState = Connector.ConnectorState.AttachedOutsideCouldPull;
+            outsideCon.couldConnect = cargoCon;
+            connectorsOccupied.Add(outsideCon);
+            cargoOccupied.Add(cargo);
+            tempConnectors.Add((outsideCon, cargoCon));
+        }
+        _nearbyConnectors = tempConnectors;
     }
 
     public void PullConnectors() {
-        _nearbyConnectors = _nearbyConnectors.OrderBy(tuple => (tuple.Item1.transform.position - tuple.Item2.transform.position).magnitude).ToList();
         List<Cargo> cargoBeingPulled = new List<Cargo>();
-        foreach (var (shipConnector, cargo) in _nearbyConnectors) {
-            if(shipConnector.connectorState != Connector.ConnectorState.AttachedOutside || cargoBeingPulled.Contains(cargo))
-                continue;
+        foreach (var (shipConnector, cargoConnector) in _nearbyConnectors) {
+            var cargo = cargoConnector.GetComponentInParent<Cargo>();
 
-            var minDistance = float.MaxValue;
-            Vector2 delta = new Vector2();
-            Connector cargoConnector = null;
-            foreach (var cargoConnectorT in cargo.connectors) {
-                Vector2 deltaT = shipConnector.transform.position - cargoConnectorT.transform.position;
-                var distance = deltaT.magnitude;
-                if (distance < minDistance) {
-                    minDistance = distance;
-                    delta = deltaT;
-                    cargoConnector = cargoConnectorT;
-                }
-            }
-            if (minDistance < pullDistance) {
-                var modPullForce = pullForce * (1 - minDistance / pullDistance) * (1 - minDistance / pullDistance);
+            Vector2 delta = shipConnector.transform.position - cargoConnector.transform.position;
+            var distance = delta.magnitude;
+
+            if (distance < pullDistance) {
+                var modPullForce = pullForce * (1 - (-1 + distance) / pullDistance) * (1 - (-1 + distance) / pullDistance);
                 cargo.rb.AddForceAtPosition(Time.fixedDeltaTime * modPullForce * delta, cargoConnector.transform.position);
                 rb.AddForceAtPosition(Time.fixedDeltaTime * modPullForce * -delta, shipConnector.transform.position);
                 Debug.DrawLine(cargoConnector.transform.position, shipConnector.transform.position, Color.yellow, Time.fixedDeltaTime);
                 shipConnector.connectorState = Connector.ConnectorState.AttachedOutsidePulling;
                 cargoBeingPulled.Add(cargo);
             }
-            if (minDistance < 0.1f) {
+            if (distance < 0.15f) {
                 Connect(shipConnector, cargo, cargoConnector);
             }
         }
