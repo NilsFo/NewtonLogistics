@@ -14,6 +14,7 @@ public class ShipController : MonoBehaviour {
     public float forwardThrust = 1f, sideThrust = 1f, backwardThrust = 1f;
 
     public float pullForce = 100f, pullDistance = 2f;
+    public float disconnectPushForce = 5f, disconnectPushForceStrong = 20f;
 
     public Rigidbody2D rb;
     public Thruster thrusterF, thrusterB, thrusterLB, thrusterLF, thrusterRB, thrusterRF;
@@ -131,34 +132,34 @@ public class ShipController : MonoBehaviour {
             _magnetOn = true;
         }
         if (kb.digit1Key.wasPressedThisFrame) {
-            Disconnect(0);
+            Disconnect(0, kb.shiftKey.isPressed);
         }
         if (kb.digit2Key.wasPressedThisFrame) {
-            Disconnect(1);
+            Disconnect(1, kb.shiftKey.isPressed);
         }
         if (kb.digit3Key.wasPressedThisFrame) {
-            Disconnect(2);
+            Disconnect(2, kb.shiftKey.isPressed);
         }
         if (kb.digit4Key.wasPressedThisFrame) {
-            Disconnect(3);
+            Disconnect(3, kb.shiftKey.isPressed);
         }
         if (kb.digit5Key.wasPressedThisFrame) {
-            Disconnect(4);
+            Disconnect(4, kb.shiftKey.isPressed);
         }
         if (kb.digit6Key.wasPressedThisFrame) {
-            Disconnect(5);
+            Disconnect(5, kb.shiftKey.isPressed);
         }
         if (kb.digit7Key.wasPressedThisFrame) {
-            Disconnect(6);
+            Disconnect(6, kb.shiftKey.isPressed);
         }
         if (kb.digit8Key.wasPressedThisFrame) {
-            Disconnect(7);
+            Disconnect(7, kb.shiftKey.isPressed);
         }
         if (kb.digit9Key.wasPressedThisFrame) {
-            Disconnect(8);
+            Disconnect(8, kb.shiftKey.isPressed);
         }
         if (kb.digit0Key.wasPressedThisFrame) {
-            Disconnect(9);
+            Disconnect(9, kb.shiftKey.isPressed);
         }
     }
 
@@ -238,6 +239,7 @@ public class ShipController : MonoBehaviour {
             }
             else if (distance < connectDistance) {
                 Connect(shipConnector, cargo, cargoConnector);
+                return;
             }
         }
     }
@@ -279,20 +281,27 @@ public class ShipController : MonoBehaviour {
         var y = relPos.y;
         x = Mathf.Round(x / 2) * 2;
         y = Mathf.Round(y / 2) * 2;
-        cargo.rb.MovePosition(transform.localToWorldMatrix.MultiplyPoint3x4(new Vector2(x, y)));
+        //cargo.rb.MovePosition(transform.localToWorldMatrix.MultiplyPoint3x4(new Vector2(x, y)));
         //cargo.transform.position = transform.localToWorldMatrix.MultiplyPoint3x4(new Vector2(x, y));
-        print(cargo.rb.rotation);
+        //print(cargo.rb.rotation);
         var angle = cargo.rb.rotation - shipConnector.transform.rotation.eulerAngles.z;
         
-        print(angle);
+        //print(angle);
         angle = Mathf.Round(angle / 90f) * 90f;
         
-        print(angle);
+        //print(angle);
         //cargo.transform.rotation = Quaternion.Euler(0,0, transform.rotation.eulerAngles.z + angle);
-        cargo.rb.SetRotation(angle + shipConnector.transform.rotation.eulerAngles.z);
+        //cargo.rb.SetRotation(angle + shipConnector.transform.rotation.eulerAngles.z);
         
-        print(angle + shipConnector.transform.rotation.eulerAngles.z);
+        //print(angle + shipConnector.transform.rotation.eulerAngles.z);
+
+        var newCargo = Instantiate(cargo, transform.localToWorldMatrix.MultiplyPoint3x4(new Vector2(x, y)),
+            Quaternion.Euler(0, 0, cargoConnector.transform.localRotation.eulerAngles.z + shipConnector.transform.rotation.eulerAngles.z + 180f),
+            shipConnector.transform.parent);
         
+        Destroy(cargo.gameObject);
+        cargo = newCargo;
+        _insideConnectors [insideConnectionIndex].Item2 = cargoConnector = cargo.GetComponentsInChildren<Connector>().First(connector => connector.name == cargoConnector.name);
         outsideConnectors.Remove(shipConnector);
         foreach (var cargoCon in cargo.connectors) {
             cargoCon.gameObject.layer = LayerMask.NameToLayer("Ship");
@@ -307,8 +316,8 @@ public class ShipController : MonoBehaviour {
         joint.connectedBody = shipRB;
         joint.anchor = cargoConnector.transform.localPosition;
         joint.connectedAnchor = shipConnector.transform.localPosition;
-        joint.frequency = 10f;
-        joint.dampingRatio = 0.5f;
+        joint.frequency = 30f;
+        joint.dampingRatio = 0.8f;
         joint.breakForce = 10000f;
         joint.breakTorque = 10000f;
         //float conZ = shipConnector.transform.localRotation.z;
@@ -316,12 +325,14 @@ public class ShipController : MonoBehaviour {
         //     min = -2f+conZ, max = 2f+conZ
         // };
         // joint.useLimits = true;
+        
+        _nearbyConnectors.Clear();
 
         connectedCargo.Add(cargo);
         gameState.cameraController.AddFollowTarget(cargo.gameObject);
     }
 
-    public void Disconnect(int index) {
+    public void Disconnect(int index, bool strongPush = false) {
         // Find other links connected to this one
         var (stayConnector, leaveConnector) = _insideConnectors [index];
         if (stayConnector == null) {
@@ -351,7 +362,8 @@ public class ShipController : MonoBehaviour {
         stayConnector.connectorState = Connector.ConnectorState.AttachedOutside;
         outsideConnectors.Add(stayConnector);
         _insideConnectors [index] = (null, null);
-        cargo.rb.AddForce((cargo.transform.position - stayConnector.transform.position).normalized * 2f, ForceMode2D.Impulse);
+        float pushForce = strongPush ? disconnectPushForceStrong : disconnectPushForce;
+        cargo.rb.AddForce((cargo.transform.position - stayConnector.transform.position).normalized * pushForce, ForceMode2D.Impulse);
         cargo.rb.AddTorque(Random.Range(-1f, 1f), ForceMode2D.Impulse);
 
         connectedCargo.Remove(cargo);

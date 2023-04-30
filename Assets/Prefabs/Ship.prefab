@@ -94,6 +94,8 @@ MonoBehaviour:
   backwardThrust: 100
   pullForce: 3000
   pullDistance: 2
+  disconnectPushForce: 5
+  disconnectPushForceStrong: 50
   rb: {fileID: 1832836480714434160}
   thrusterF: {fileID: 1832836482554939685}
   thrusterB: {fileID: 1832836481794214957}
