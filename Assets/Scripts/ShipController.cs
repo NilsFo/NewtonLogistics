@@ -23,11 +23,13 @@ public class ShipController : MonoBehaviour {
     private static readonly int MAX_CONNECTORS = 10; 
     private (Connector, Connector)[] _insideConnectors = new (Connector, Connector)[MAX_CONNECTORS];
     private List<(Connector, Cargo)> _nearbyConnectors = new List<(Connector, Cargo)>();
-    public List<Cargo> allCargo;
+    public List<Cargo> connectedCargo = new List<Cargo>();
+
+    private GameStateBehaviourScript gameState;
     
     // Start is called before the first frame update
     void Start() {
-        allCargo = new List<Cargo>(FindObjectsOfType<Cargo>());
+        gameState = FindObjectOfType<GameStateBehaviourScript>();
     }
 
     // Update is called once per frame
@@ -260,6 +262,9 @@ public class ShipController : MonoBehaviour {
         };
         joint.useLimits = true;
 
+        
+        connectedCargo.Add(cargo);
+        gameState.cameraController.AddFollowTarget(cargo.gameObject);
     }
 
     public void Disconnect(int index) {
@@ -281,10 +286,12 @@ public class ShipController : MonoBehaviour {
             }
         }
         cargo.transform.parent = null;
+        cargo.gameObject.layer = LayerMask.NameToLayer("Cargo");
         cargo.cargoState = Cargo.CargoState.Free;
         Destroy(cargo.GetComponent<HingeJoint2D>());
         foreach (var cargoConnector in cargo.connectors) {
             cargoConnector.connectorState = Connector.ConnectorState.Cargo;
+            cargoConnector.gameObject.layer = LayerMask.NameToLayer("Cargo");
             outsideConnectors.Remove(cargoConnector);
         }
         stayConnector.connectorState = Connector.ConnectorState.AttachedOutside;
@@ -292,5 +299,9 @@ public class ShipController : MonoBehaviour {
         _insideConnectors [index] = (null, null);
         cargo.rb.AddForce((cargo.transform.position - stayConnector.transform.position).normalized * 1f, ForceMode2D.Impulse);
         cargo.rb.AddTorque(Random.Range(-0.5f, 0.5f), ForceMode2D.Impulse);
+
+        connectedCargo.Remove(cargo);
+        gameState.cameraController.RemoveFollowTarget(cargo.gameObject);
     }
+
 }

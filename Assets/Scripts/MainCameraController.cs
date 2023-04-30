@@ -59,7 +59,7 @@ public class MainCameraController : MonoBehaviour
         if (virtualCamera != null)
         {
             // Move
-            secretFollowObj.transform.position = GetMiddlePos();
+            secretFollowObj.transform.position = GetMiddlePos() + GetVelocityVector();
 
             // Zoom
             Bounds bounds = GetFollowBounds();
@@ -71,6 +71,11 @@ public class MainCameraController : MonoBehaviour
             virtualCamera.m_Lens.OrthographicSize = Mathf.Lerp(virtualCamera.m_Lens.OrthographicSize, zoom,
                 Time.deltaTime * orthographicZoomSpeed);
         }
+    }
+
+    public Vector3 GetVelocityVector() {
+        var velocity = _gameState.player.rb.velocity;
+        return velocity;
     }
 
     public Vector3 GetMiddlePos()
