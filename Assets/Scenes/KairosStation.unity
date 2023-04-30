@@ -972,6 +972,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1832836480714434162, guid: 2da1d2bf77fc4f5488a5e6a885fd69b8, type: 3}
+      propertyPath: pullDistance
+      value: 2.5
+      objectReference: {fileID: 0}
     - target: {fileID: 1832836480714434163, guid: 2da1d2bf77fc4f5488a5e6a885fd69b8, type: 3}
       propertyPath: m_RootOrder
       value: 3

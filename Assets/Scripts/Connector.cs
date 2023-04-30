@@ -11,7 +11,7 @@ public class Connector : MonoBehaviour {
     public ConnectorState connectorState;
 
     public Connector couldConnect;
-    public LineRenderer connectionLine;
+    public SpriteRenderer connectionLine, connectionInsideBtn;
 
     private void OnDrawGizmos() {
         switch(connectorState) {
@@ -36,17 +36,23 @@ public class Connector : MonoBehaviour {
 
     public void Update() {
         if (connectorState is ConnectorState.AttachedOutsideCouldPull or ConnectorState.AttachedOutsidePulling) {
+            connectionInsideBtn.enabled = false;
             connectionLine.enabled = true;
             var myPos = transform.position;
             var otherPos = couldConnect.transform.position;
-            connectionLine.SetPositions(new []{myPos, otherPos});
+            connectionLine.transform.position = (myPos + otherPos)/2;
+            connectionLine.transform.rotation = Quaternion.Euler(0, 0, Vector2.SignedAngle(Vector2.up, myPos - otherPos));
+            connectionLine.size = new Vector2(0.5f, Vector2.Distance(myPos, otherPos));
             if (connectorState == ConnectorState.AttachedOutsideCouldPull) {
-                connectionLine.startColor = connectionLine.endColor = Color.yellow;
+                connectionLine.color = Color.yellow;
             } else {
-                connectionLine.startColor = connectionLine.endColor = Color.white;
+                connectionLine.color = Color.white;
             }
+        } else if (connectorState is ConnectorState.AttachedInside) {
+            connectionInsideBtn.enabled = true;
         } else {
             connectionLine.enabled = false;
+            connectionInsideBtn.enabled = false;
         }
     }
 }
