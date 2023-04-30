@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 8416148780020224115}
   - component: {fileID: 8416148780020224013}
   - component: {fileID: 8416148780020224012}
+  - component: {fileID: 1349441870}
   m_Layer: 0
   m_Name: cm
   m_TagString: Untagged
@@ -88,6 +89,23 @@ MonoBehaviour:
   m_MaximumFOV: 60
   m_MinimumOrthoSize: 1
   m_MaximumOrthoSize: 5000
+--- !u!114 &1349441870
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8416148780020224114}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 68bb026fafb42b14791938953eaace77, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_NoiseProfile: {fileID: 11400000, guid: 69ce8388f6785dd4c8c39915efece2f4, type: 2}
+  m_PivotOffset: {x: 0, y: 0, z: 0}
+  m_AmplitudeGain: 0
+  m_FrequencyGain: 0
+  mNoiseOffsets: {x: 0, y: 0, z: 0}
 --- !u!1 &8416148781040691596
 GameObject:
   m_ObjectHideFlags: 0
@@ -149,7 +167,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 9.24
+  orthographic size: 8
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -266,6 +284,10 @@ MonoBehaviour:
   orthographicZoomSpeedAuto: 0.69
   orthographicZoomSpeedPlayerRequest: 18
   playerRequestsZoomOut: 0
+  cameraShakeDuration: 0
+  amplitudeGainTarget: 0
+  frequencyGainTarget: 0
+  cameraShakeResetSpeed: 2
 --- !u!1 &8416148781315684823
 GameObject:
   m_ObjectHideFlags: 0
@@ -323,10 +345,13 @@ PolygonCollider2D:
   m_AutoTiling: 0
   m_Points:
     m_Paths:
-    - - {x: 30.527813, y: -21.646427}
-      - {x: 27.66305, y: 21.112823}
-      - {x: -26.429499, y: 22.173502}
-      - {x: -28.748228, y: -19.155207}
+    - - {x: 85.958725, y: -59.52003}
+      - {x: 121.528625, y: 63.437675}
+      - {x: 44.046856, y: 81.52812}
+      - {x: 11.279238, y: 72.994896}
+      - {x: -41.95517, y: 88.166214}
+      - {x: -103.56995, y: 81.22348}
+      - {x: -69.88248, y: -60.540268}
 --- !u!1 &8416148781468946026
 GameObject:
   m_ObjectHideFlags: 0
@@ -414,7 +439,7 @@ MonoBehaviour:
   m_Follow: {fileID: 8416148781468946027}
   m_Lens:
     FieldOfView: 60
-    OrthographicSize: 9.24
+    OrthographicSize: 8
     NearClipPlane: 0.3
     FarClipPlane: 1000
     Dutch: 0
@@ -442,6 +467,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f453f694addf4275988fac205bc91968, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_BoundingShape2D: {fileID: 0}
+  m_BoundingShape2D: {fileID: 8416148781315684817}
   m_Damping: 0.5
   m_MaxWindowSize: -1

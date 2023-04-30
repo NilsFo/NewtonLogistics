@@ -8,13 +8,18 @@ using UnityEngine.Events;
 
 public class DumpStationBehaviourScript : MonoBehaviour
 {
+    [Header("Ref")]
     [SerializeField] private Collider2D myCollider2D;
     [SerializeField] private GameStateBehaviourScript gameState;
     [SerializeField] private TextMeshProUGUI textLabel;
-    
+    [SerializeField] private Transform generalAttractorPoint = null;
+    [SerializeField] private Transform[] specificAttractorPoint = new Transform[0];
+        
+    [Header("Config")]
     [SerializeField] private int stationIndex;
     [SerializeField] private float pushPower = 5f;
-    
+
+    [Header("Debug")]
     [SerializeField] private List<DumpableBehaviourScript> listOfInTrigger;
     [SerializeField] private List<DumpableBehaviourScript> listOfInTriggerWrongDump;
     [SerializeField] private List<DumpableBehaviourScript> listOfOverlapCenterMass;
@@ -69,7 +74,43 @@ public class DumpStationBehaviourScript : MonoBehaviour
                 Vector2 direction = rigidbody2D.position - (Vector2) myCollider2D.bounds.center;
                 rigidbody2D.AddForce(direction.normalized * (pushPower * Time.deltaTime), ForceMode2D.Impulse);
             }
-            
+        }
+
+        if (listOfOverlapCenterMass.Count > 0)
+        {
+            if (generalAttractorPoint != null)
+            {
+                 for (int i = 0; i < listOfOverlapCenterMass.Count; i++)
+                 {
+                     DumpableBehaviourScript dump = listOfOverlapCenterMass[i];
+                     if (dump.Cargo.cargoState == Cargo.CargoState.Free)
+                     {
+                         Vector2 direction = dump.Rigidbody2D.position - (Vector2) generalAttractorPoint.position;
+                         if (direction.magnitude < 0.2f)
+                         { 
+                             dump.Rigidbody2D.AddForce(direction.normalized * (pushPower * Time.deltaTime), ForceMode2D.Impulse);  
+                         }
+                     }
+                 }   
+            }
+            else if (specificAttractorPoint.Length > 0)
+            {
+                for (int i = 0; i < listOfOverlapCenterMass.Count; i++)
+                {
+                    if (i < specificAttractorPoint.Length)
+                    {
+                        DumpableBehaviourScript dump = listOfOverlapCenterMass[i];
+                        if (dump.Cargo.cargoState == Cargo.CargoState.Free)
+                        {
+                            Vector2 direction = dump.Rigidbody2D.position - (Vector2) specificAttractorPoint[i].position;
+                            if (direction.magnitude < 0.2f)
+                            { 
+                                dump.Rigidbody2D.AddForce(direction.normalized * (pushPower * Time.deltaTime), ForceMode2D.Impulse);  
+                            }
+                        }
+                    }
+                } 
+            }
         }
     }
     
@@ -103,4 +144,6 @@ public class DumpStationBehaviourScript : MonoBehaviour
         listOfInTriggerWrongDump.Remove(dumpableBehaviourScript);
         gameState.SetPoints(stationIndex, listOfOverlapCenterMass.Count);
     }
+
+    public int StationIndex => stationIndex;
 }

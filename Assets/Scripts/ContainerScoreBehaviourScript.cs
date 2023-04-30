@@ -12,6 +12,7 @@ public class ContainerScoreBehaviourScript : MonoBehaviour
     [SerializeField] private GameStateBehaviourScript gameState;
 
     private StationPanelBehaviourScript[] _stationPanels;
+    private DumpStationBehaviourScript[] listOfStations;
     
     private void Start()
     {
@@ -32,37 +33,31 @@ public class ContainerScoreBehaviourScript : MonoBehaviour
 
     private void CreateStationPanels()
     {
-        Vector2Int[] stats = gameState.GetStatsArray();
-        _stationPanels = new StationPanelBehaviourScript[stats.Length];
-        for (int i = 0; i < stats.Length; i++)
+        if(listOfStations == null) return;
+        _stationPanels = new StationPanelBehaviourScript[listOfStations.Length];
+        for (int i = 0; i < listOfStations.Length; i++)
         {
-            Vector2Int currrentStats = stats[i];
+            DumpStationBehaviourScript station = listOfStations[i];
             GameObject obj = Instantiate(prefabStationLabel, container.transform);
             obj.SetActive(true);
             _stationPanels[i] = obj.GetComponent<StationPanelBehaviourScript>();
-            _stationPanels[i].Init(i, currrentStats[0], currrentStats[1]);
+            _stationPanels[i].Init(i);
         }
     }
     
     private void OnEnable()
     {
-        gameState.onStatsChange.AddListener(OnStateChange);
-        gameState.onDumpListChange.AddListener(OnDumpListChange);
+        gameState.onDumpStationChange.AddListener(OnStationListChange);
     }
 
     private void OnDisable()
     {
-        gameState.onStatsChange.RemoveListener(OnStateChange);
-        gameState.onDumpListChange.RemoveListener(OnDumpListChange);
+        gameState.onDumpStationChange.RemoveListener(OnStationListChange);
     }
 
-    private void OnStateChange(int index, Vector2Int state)
+    private void OnStationListChange(DumpStationBehaviourScript[] list)
     {
-        _stationPanels[index].UpdateState(state[0]);
-    }
-    
-    private void OnDumpListChange(DumpableBehaviourScript[] list)
-    {
+        listOfStations = list;
         CleanStationPanels();
         CreateStationPanels();
     }

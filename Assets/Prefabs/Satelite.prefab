@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 3131412049337183043}
   - component: {fileID: 1432166616226435285}
   - component: {fileID: 3772401417465796128}
+  - component: {fileID: 5721013195170222272}
   m_Layer: 0
   m_Name: Satelite
   m_TagString: Untagged
@@ -144,3 +145,27 @@ PolygonCollider2D:
       - {x: 0.3790083, y: 0.93403244}
       - {x: -0.2941246, y: 0.9852629}
       - {x: -1.3284848, y: 1.9802775}
+--- !u!114 &5721013195170222272
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1915629113816185557}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6402c9af75c2b804ebff18f995418cb0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playSound: 1
+  impactSound: {fileID: 8300000, guid: 0d40e3afa3a3cf040ab4fd4f90ccbfb6, type: 3}
+  volumeMult: 1
+  respectBinning: 1
+  showParticles: 1
+  particleColor: {r: 0.454902, g: 0.627451, b: 0.8196079, a: 1}
+  impactParticlePrefab: {fileID: 473678605313508382, guid: 3128d208d5a807244ab69d5ad208cb78, type: 3}
+  particleScale: 0.565
+  cameraShake: 1
+  shakeTime: 0.5
+  shakeAmplitude: 1
+  shakeFrequency: 1

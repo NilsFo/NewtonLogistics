@@ -28,7 +28,6 @@ public class RedBarrel : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D other)
     {
         float mag = other.relativeVelocity.magnitude;
-        print("barrel hit strength: "+mag);
 
         if (mag>=minHitStrength)
         {
@@ -36,7 +35,6 @@ public class RedBarrel : MonoBehaviour
         }
         else
         {
-            print("Not enough!");
         }
     }
 

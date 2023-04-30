@@ -13,8 +13,9 @@ public class GameStateSensitiveBehaviourScript : MonoBehaviour
     
     public GameStateBehaviourScript gameState;
 
-    private bool isActivate = false;
-    
+    public bool isInit = false;
+    public bool isActivate = false;
+
     private void Awake()
     {
         if (onInit == null)
@@ -26,6 +27,7 @@ public class GameStateSensitiveBehaviourScript : MonoBehaviour
 
         gameState = FindObjectOfType<GameStateBehaviourScript>();
         isActivate = false;
+        isInit = false;
     }
 
     private void OnEnable()
@@ -53,9 +55,9 @@ public class GameStateSensitiveBehaviourScript : MonoBehaviour
 
     private void OnGameStateChange(GameLevel leve, GameState state)
     {
-        if (leve != myLevel && isActivate)
+        if (leve != myLevel)
         {
-            Deactivate();
+            if(isActivate) Deactivate();
             return;
         }
 
@@ -68,7 +70,7 @@ public class GameStateSensitiveBehaviourScript : MonoBehaviour
                 matchState = true;
             }
         }
-        
+
         if (!matchState && isActivate)
         {
             Deactivate();
@@ -77,7 +79,6 @@ public class GameStateSensitiveBehaviourScript : MonoBehaviour
 
         if (matchState && !isActivate)
         {
-            if (state == GameState.Init) Init();
             Activate();
             return;
         }
@@ -85,16 +86,20 @@ public class GameStateSensitiveBehaviourScript : MonoBehaviour
 
     private void Init()
     {
+        isInit = true;
         onInit.Invoke();
     }
     
     private void Activate()
     {
+        if (!isInit) Init();
+        isActivate = true;
         onActivate.Invoke();
     }
     
     private void Deactivate()
     {
+        isActivate = false;
         onDeactivate.Invoke();
     }
 }

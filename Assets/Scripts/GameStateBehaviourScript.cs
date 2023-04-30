@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
@@ -42,15 +43,17 @@ public class GameStateBehaviourScript : MonoBehaviour
     // misc
     public ShipController player;
     public MainCameraController cameraController;
+    public MusicManager musicManager;
     
-    //privates
-    private DumpableBehaviourScript[] listOfDump;
-    private DumpStationBehaviourScript[] listOfDumpStations;
+    [Header("Debug")]
+    [SerializeField] private DumpableBehaviourScript[] listOfDump;
+    [SerializeField] private DumpStationBehaviourScript[] listOfDumpStations;
 
     private void Awake()
     {
         player = FindObjectOfType<ShipController>();
         cameraController = FindObjectOfType<MainCameraController>();
+        musicManager = FindObjectOfType<MusicManager>();
         
         if (onGameStateChange == null)
             onGameStateChange = new UnityEvent<GameLevel, GameState>();
@@ -67,7 +70,21 @@ public class GameStateBehaviourScript : MonoBehaviour
     {
         FindAllDumpStations();
         FindAllDumpable();
-        ChangeGameLevelAndGameState(GameLevel.One, GameState.Init);
+        musicManager.PlaySongLoop();
+        ChangeGameLevelAndGameState(gameLevel, gameState);
+    }
+
+    private void Update()
+    {
+        if (gameState == GameState.Init)
+        {
+            ChangeGameState(GameState.Intro);
+        }
+
+        if (gameState == GameState.Finish)
+        {
+            ChangeGameLevelAndGameState(NextLevel(),GameState.Init);
+        }
     }
 
     public GameState CurrentGameState => gameState;
@@ -138,39 +155,51 @@ public class GameStateBehaviourScript : MonoBehaviour
 
     private GameLevel NextLevel()
     {
-        if (gameLevel != GameLevel.None)
+        if (gameLevel == GameLevel.None)
         {
             return GameLevel.One;
         }
         
-        if (gameLevel != GameLevel.One)
+        if (gameLevel == GameLevel.One)
         {
             return GameLevel.Two;
         }
         
-        if (gameLevel != GameLevel.Two)
+        if (gameLevel == GameLevel.Two)
         {
             return GameLevel.Three;
         }
         
-        if (gameLevel != GameLevel.Three)
+        if (gameLevel == GameLevel.Three)
         {
             return GameLevel.Four;
         }
         
-        if (gameLevel != GameLevel.Four)
+        if (gameLevel == GameLevel.Four)
         {
             return GameLevel.Done;
         }
 
-        return gameLevel;
+        return GameLevel.Done;
     }
     
     private void FindAllDumpable()
     {
-        listOfDump = FindObjectsByType<DumpableBehaviourScript>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+        DumpableBehaviourScript[] tempList =  FindObjectsByType<DumpableBehaviourScript>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+        List<DumpableBehaviourScript> activeList = new List<DumpableBehaviourScript>();
+        //Dump Aktive
+        for (int i = 0; i < tempList.Length; i++)
+        {
+            DumpableBehaviourScript dump = tempList[i];
+            if(dump.IsActive) activeList.Add(dump);
+        }
+
+        listOfDump = activeList.ToArray();
+        onDumpListChange.Invoke(listOfDump);
+        
+        //Points
+        currentStatsArray = new Vector2Int[listOfDumpStations.Length];
         Dictionary<int, int> dict = new Dictionary<int, int>();
-            
         for (int i = 0; i < listOfDump.Length; i++)
         {
             DumpableBehaviourScript dumb = listOfDump[i];
@@ -180,24 +209,28 @@ public class GameStateBehaviourScript : MonoBehaviour
             }
             dict[dumb.DumpStationIndex] = dict[dumb.DumpStationIndex] + 1;
         }
-        
-        currentStatsArray = new Vector2Int[dict.Keys.Count];
-        for (int i = 0; i < dict.Keys.Count; i++) 
+
+        for (int i = 0; i < currentStatsArray.Length; i++)
         {
-            currentStatsArray[i] = new Vector2Int(0,  dict[i]);
-        }
-        onDumpListChange.Invoke(listOfDump);
-        
-        //onStatsChange after onDumpListChange for Stations UI
-        for (int i = 0; i < dict.Keys.Count; i++) 
-        {
-            onStatsChange.Invoke(i, currentStatsArray[i]);
+            if (dict.ContainsKey(i))
+            {
+                currentStatsArray[i] = new Vector2Int(0, dict[i]);
+                onStatsChange.Invoke(i, currentStatsArray[i]);
+            }
         }
     }
 
     public void FindAllDumpStations()
     {
-        listOfDumpStations = FindObjectsByType<DumpStationBehaviourScript>(FindObjectsInactive.Exclude, FindObjectsSortMode.InstanceID);
+        DumpStationBehaviourScript[] tempList = FindObjectsByType<DumpStationBehaviourScript>(FindObjectsInactive.Exclude, FindObjectsSortMode.InstanceID);
+        DumpStationBehaviourScript[] newArray = new DumpStationBehaviourScript[tempList.Length];
+        for (int i = 0; i < tempList.Length; i++)
+        {
+            DumpStationBehaviourScript station = tempList[i];
+            newArray[station.StationIndex] = station;
+        }
+
+        listOfDumpStations = newArray;
         onDumpStationChange.Invoke(listOfDumpStations);
     }
     
@@ -214,6 +247,7 @@ public class GameStateBehaviourScript : MonoBehaviour
     {
         gameState = state;
         onGameStateChange.Invoke(gameLevel, gameState);
+        if(gameState == GameState.Start) FindAllDumpable();
     }
 
     public void ChangeGameLevelAndGameState(GameLevel level, GameState state)

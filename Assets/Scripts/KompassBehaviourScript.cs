@@ -8,11 +8,12 @@ public class KompassBehaviourScript : MonoBehaviour
     [SerializeField] private CircleCollider2D circleCollider2D;
     [SerializeField] private GameStateBehaviourScript gameState;
 
-    private DumpableBehaviourScript[] listOfDumps;
-    private GameObject[] listOfDumpableObj;
+    [Header("Debug")]
+    [SerializeField] private DumpableBehaviourScript[] listOfDumps;
+    [SerializeField] private GameObject[] listOfDumpableObj;
     
-    private DumpStationBehaviourScript[] listOfDumpStations;
-    private GameObject[] listOfDumpStationObj;
+    [SerializeField] private DumpStationBehaviourScript[] listOfDumpStations;
+    [SerializeField] private GameObject[] listOfDumpStationObj;
     
     private void OnEnable()
     {
@@ -44,12 +45,12 @@ public class KompassBehaviourScript : MonoBehaviour
             GameObject obj = listOfDumpableObj[i];
             Destroy(obj);
         }
+        listOfDumpableObj = new GameObject[0];
     }
 
     private void CreateDumpableObj()
     {
         if(listOfDumps == null) return;
-        if(listOfDumpableObj != null) return;
         listOfDumpableObj = new GameObject[listOfDumps.Length];
         for (int i = 0; i < listOfDumps.Length; i++)
         {
@@ -87,12 +88,12 @@ public class KompassBehaviourScript : MonoBehaviour
             GameObject obj = listOfDumpStationObj[i];
             Destroy(obj);
         }
+        listOfDumpStationObj = new GameObject[0];
     }
 
     private void CreateDumpStationObj()
     {
         if(listOfDumpStations == null) return;
-        if(listOfDumpStationObj != null) return;
         listOfDumpStationObj = new GameObject[listOfDumpStations.Length];
         for (int i = 0; i < listOfDumpStations.Length; i++)
         {
