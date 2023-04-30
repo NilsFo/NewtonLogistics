@@ -27,7 +27,7 @@ public class CameraShower : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        print("enter: "+other.gameObject.name);
+        //print("enter: "+other.gameObject.name);
         var player = other.GetComponentInParent<ShipController>();
         if (player != null)
         {
@@ -47,7 +47,7 @@ public class CameraShower : MonoBehaviour
     [ContextMenu("Hide")]
     public void Hide()
     {
-        print("hide");
+        //print("hide");
         foreach (GameObject myPoint in myPoints)
         {
             _gameStateBehaviourScript.cameraController.RemoveFollowTarget(myPoint);
@@ -57,7 +57,7 @@ public class CameraShower : MonoBehaviour
     [ContextMenu("Show")]
     public void Show()
     {
-        print("show");
+        //print("show");
         foreach (GameObject myPoint in myPoints)
         {
             _gameStateBehaviourScript.cameraController.AddFollowTarget(myPoint);
