@@ -6,7 +6,7 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/KairosStation.unity
+    path: Assets/Scenes/PHScene.unity
     guid: c04eaf1330b9a4e40987cd59d91bbba6
   - enabled: 1
     path: Assets/Scenes/MainMenuScene.unity
