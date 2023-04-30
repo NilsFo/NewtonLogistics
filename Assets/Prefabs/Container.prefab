@@ -135,12 +135,12 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: fd187db988116f74686804486d457835, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 5e84d26fa0443ae468a3317a1a7bc01b, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 4, y: 2}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -165,7 +165,7 @@ GameObject:
   m_Layer: 6
   m_Name: Container
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: -964228994112308473, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -231,12 +231,12 @@ MonoBehaviour:
   spriteRenderer: {fileID: 8629260293993371693}
   cargo: {fileID: 939697907216998947}
   dumpStationIndex: 0
-  defaultSprite: {fileID: 21300000, guid: fd187db988116f74686804486d457835, type: 3}
+  defaultSprite: {fileID: 21300000, guid: 5e84d26fa0443ae468a3317a1a7bc01b, type: 3}
   sprites:
-  - {fileID: 21300000, guid: fd187db988116f74686804486d457835, type: 3}
-  - {fileID: 21300000, guid: c84312868fbe8f14c8a03a58ad19a22c, type: 3}
-  - {fileID: 21300000, guid: 3c1a1ec226f1f6e4ab90961e2f05f7fc, type: 3}
-  - {fileID: 21300000, guid: 2806b2f6825eada43b55b0e39397a1d0, type: 3}
+  - {fileID: 21300000, guid: 5e84d26fa0443ae468a3317a1a7bc01b, type: 3}
+  - {fileID: 21300000, guid: 95ffdbcf4b61cef49955cfbdc2823c5b, type: 3}
+  - {fileID: 21300000, guid: c4c5048a9c0e288449457b9a9cf4a7f8, type: 3}
+  - {fileID: 21300000, guid: c4c5048a9c0e288449457b9a9cf4a7f8, type: 3}
   isActive: 0
 --- !u!114 &3238917468920190974
 MonoBehaviour:
