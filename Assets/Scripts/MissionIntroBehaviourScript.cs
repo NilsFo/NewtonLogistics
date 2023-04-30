@@ -54,7 +54,7 @@ public class MissionIntroBehaviourScript : MonoBehaviour
     private void PlayIntroLevelOne()
     {
         inPlaying = true;
-        introTime = 5f;
+        introTime = 0f;
         //TODO Phase 1..X based on Time
     }
 }

@@ -68,7 +68,7 @@ public class GameStateBehaviourScript : MonoBehaviour
     {
         FindAllDumpStations();
         FindAllDumpable();
-        ChangeGameLevelAndGameState(GameLevel.None, GameState.Init);
+        ChangeGameLevelAndGameState(gameLevel, gameState);
     }
 
     private void Update()

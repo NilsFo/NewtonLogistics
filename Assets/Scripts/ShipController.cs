@@ -198,7 +198,8 @@ public class ShipController : MonoBehaviour {
             Vector2 delta = shipConnector.transform.position - cargoConnector.transform.position;
             var distance = delta.magnitude;
 
-            if (distance < pullDistance) {
+            float connectDistance = 0.15f;
+            if (distance < pullDistance && distance >= connectDistance) {
                 var modPullForce = pullForce * (1 - (-1 + distance) / pullDistance) * (1 - (-1 + distance) / pullDistance);
                 cargo.rb.AddForceAtPosition(Time.fixedDeltaTime * modPullForce * delta, cargoConnector.transform.position);
                 rb.AddForceAtPosition(Time.fixedDeltaTime * modPullForce * -delta, shipConnector.transform.position);
@@ -206,7 +207,7 @@ public class ShipController : MonoBehaviour {
                 shipConnector.connectorState = Connector.ConnectorState.AttachedOutsidePulling;
                 cargoBeingPulled.Add(cargo);
             }
-            if (distance < 0.15f) {
+            else if (distance < connectDistance) {
                 Connect(shipConnector, cargo, cargoConnector);
             }
         }
@@ -289,7 +290,7 @@ public class ShipController : MonoBehaviour {
         }
         var cargo = leaveConnector.GetComponentInParent<Cargo>();
         foreach (var cargoConnector in cargo.connectors) {
-            if (cargoConnector.connectorState == Connector.ConnectorState.AttachedInside) {
+            if (cargoConnector.connectorState == Connector.ConnectorState.AttachedInside && cargoConnector != leaveConnector) {
                 for (int i = 0; i < MAX_CONNECTORS; i++) {
                     if (_insideConnectors [i].Item1 == cargoConnector) {
                         // Disconnect down the line first
