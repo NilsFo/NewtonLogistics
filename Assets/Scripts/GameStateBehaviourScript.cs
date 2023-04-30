@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
@@ -23,8 +24,8 @@ public class GameStateBehaviourScript : MonoBehaviour
     
     public UnityEvent<int,Vector2Int> onStatsChange;
     
-    [Header("Config")]
-    [SerializeField] private int[] levelStats;
+    public UnityEvent<DumpableBehaviourScript[]> onDumpListChange;
+    public UnityEvent<DumpStationBehaviourScript[]> onDumpStationChange;
     
     //Stats
     [Header("Stats")]
@@ -33,18 +34,15 @@ public class GameStateBehaviourScript : MonoBehaviour
     
     // misc
     public ShipController player;
+    
+    //privates
+    private DumpableBehaviourScript[] listOfDump;
+    private DumpStationBehaviourScript[] listOfDumpStations;
 
     private void Awake()
     {
         player = FindObjectOfType<ShipController>();
-        
-        currentStatsArray = new Vector2Int[levelStats.Length];
-        
-        for (int i = 0; i < levelStats.Length; i++) 
-        {
-            currentStatsArray[i] = new Vector2Int(0, levelStats[i] );
-        }
-        
+
         if (onInit == null)
             onInit = new UnityEvent();
         if (onIntro == null)
@@ -58,10 +56,16 @@ public class GameStateBehaviourScript : MonoBehaviour
         
         if (onStatsChange == null)
             onStatsChange = new UnityEvent<int, Vector2Int>();
+        if (onDumpListChange == null)
+            onDumpListChange = new UnityEvent<DumpableBehaviourScript[]>();
+        if (onDumpStationChange == null)
+            onDumpStationChange = new UnityEvent<DumpStationBehaviourScript[]>();
     }
 
     void Start()
     {
+        FindAllDumpStations();
+        FindAllDumpable();
         ChangeToStart();
     }
 
@@ -123,6 +127,41 @@ public class GameStateBehaviourScript : MonoBehaviour
         {
             this.ChangeToFinish();
         }
+    }
+
+    private void FindAllDumpable()
+    {
+        listOfDump = FindObjectsByType<DumpableBehaviourScript>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+        Dictionary<int, int> dict = new Dictionary<int, int>();
+            
+        for (int i = 0; i < listOfDump.Length; i++)
+        {
+            DumpableBehaviourScript dumb = listOfDump[i];
+            if (!dict.ContainsKey(dumb.DumpStationIndex))
+            {
+                dict[dumb.DumpStationIndex] = 0;
+            }
+            dict[dumb.DumpStationIndex] = dict[dumb.DumpStationIndex] + 1;
+        }
+        
+        currentStatsArray = new Vector2Int[dict.Keys.Count];
+        for (int i = 0; i < dict.Keys.Count; i++) 
+        {
+            currentStatsArray[i] = new Vector2Int(0,  dict[i]);
+        }
+        onDumpListChange.Invoke(listOfDump);
+        
+        //onStatsChange after onDumpListChange for Stations UI
+        for (int i = 0; i < dict.Keys.Count; i++) 
+        {
+            onStatsChange.Invoke(i, currentStatsArray[i]);
+        }
+    }
+
+    public void FindAllDumpStations()
+    {
+        listOfDumpStations = FindObjectsByType<DumpStationBehaviourScript>(FindObjectsInactive.Exclude, FindObjectsSortMode.InstanceID);
+        onDumpStationChange.Invoke(listOfDumpStations);
     }
     
     #region EventFunctions
