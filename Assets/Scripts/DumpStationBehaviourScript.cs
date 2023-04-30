@@ -19,6 +19,8 @@ public class DumpStationBehaviourScript : MonoBehaviour
     [SerializeField] private List<DumpableBehaviourScript> listOfInTriggerWrongDump;
     [SerializeField] private List<DumpableBehaviourScript> listOfOverlapCenterMass;
 
+    
+    
     // Start is called before the first frame update
     void Awake()
     {
