@@ -9,6 +9,7 @@ public class RedBarrel : MonoBehaviour
     [Header("Fass Settings")]
     public bool explodeable;
     public float minHitStrength = 1;
+    private GameStateBehaviourScript _gameStateBehaviourScript;
 
     [Header("Explosion Settings")]
     public Explosion Explosion; 
@@ -16,6 +17,7 @@ public class RedBarrel : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        _gameStateBehaviourScript = FindObjectOfType<GameStateBehaviourScript>();
     }
 
     // Update is called once per frame
