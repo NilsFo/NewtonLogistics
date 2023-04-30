@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class MissionIntroBehaviourScript : MonoBehaviour
@@ -11,6 +12,8 @@ public class MissionIntroBehaviourScript : MonoBehaviour
     [SerializeField] private float introTime = 3f;
     [SerializeField] private float currentTime = 0f;
     [SerializeField] private bool inPlaying = false;
+
+    private Stack<Tuple<float, Action>> phaseStack;
     
     private void OnEnable()
     {
@@ -40,7 +43,16 @@ public class MissionIntroBehaviourScript : MonoBehaviour
         {
             if (currentTime < introTime)
             {
-                //TODO Trigger Phase form Stack
+                //Trigger Phase form Stack when time reached!
+                if (phaseStack.Count > 0)
+                {
+                    Tuple<float, Action> trup = phaseStack.Peek();
+                    if (trup.Item1 < currentTime)
+                    {
+                        phaseStack.Pop();
+                        trup.Item2.Invoke();
+                    }
+                }
                 currentTime += Time.deltaTime;
             }
             else if(currentTime >= introTime)
@@ -55,6 +67,31 @@ public class MissionIntroBehaviourScript : MonoBehaviour
     {
         inPlaying = true;
         introTime = 0f;
-        //TODO Phase 1..X based on Time
+        phaseStack = new Stack<Tuple<float, Action>>();
+        phaseStack.Push(new Tuple<float, Action>(4f, IntroLevelOnePhaseFour));
+        phaseStack.Push(new Tuple<float, Action>(3f, IntroLevelOnePhaseThree));
+        phaseStack.Push(new Tuple<float, Action>(2f, IntroLevelOnePhaseTwo));
+        phaseStack.Push(new Tuple<float, Action>(1f, IntroLevelOnePhaseOne));
     }
+
+    #region IntroLevelOne
+
+    void IntroLevelOnePhaseOne()
+    {
+        Debug.Log("First Line of Intro Bla Bla");
+    }
+    void IntroLevelOnePhaseTwo()
+    {
+        Debug.Log("Two Line of Intro Bla Bla");
+    }
+    void IntroLevelOnePhaseThree()
+    {
+        Debug.Log("Three Line of Intro Bla Bla");
+    }
+    void IntroLevelOnePhaseFour()
+    {
+        Debug.Log("Four Line of Intro Bla Bla");
+    }
+
+    #endregion
 }
