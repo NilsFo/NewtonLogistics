@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class MusicManager : MonoBehaviour
@@ -11,9 +13,12 @@ public class MusicManager : MonoBehaviour
     public readonly float GLOBAL_MUSIC_VOLUME_MULT = 0.3f;
     public readonly float GLOBAL_SOUND_VOLUME_MULT = 1.5f;
 
+    [Range(0, 1)] public float levelVolumeMult = 1.0f;
+
     private AudioListener _listener;
     public AudioSource song;
     private List<AudioSource> playList;
+    private Dictionary<string, float> audioJail;
 
     private void Awake()
     {
@@ -26,6 +31,7 @@ public class MusicManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        audioJail = new Dictionary<string, float>();
     }
 
     private void Play(int i)
@@ -48,6 +54,34 @@ public class MusicManager : MonoBehaviour
     {
         transform.position = _listener.transform.position;
         userDesiredSoundVolume = MathF.Min(userDesiredMusicVolume * 3.5f, 1.0f);
+
+        foreach (var audioSource in playList)
+        {
+            audioSource.volume = GetVolumeMusic() * levelVolumeMult;
+        }
+
+        var keys = audioJail.Keys.ToArrayPooled().ToList();
+        List<string> releaseKeys = new List<string>();
+        if (keys.Count > 0)
+        {
+            for (var i = 0; i < keys.Count; i++)
+            {
+                string key = keys[i];
+                float timeout = audioJail[key];
+                timeout -= Time.deltaTime;
+                audioJail[key] = timeout;
+
+                if (timeout < 0)
+                {
+                    releaseKeys.Add(key);
+                }
+            }
+        }
+
+        foreach (var releaseKey in releaseKeys)
+        {
+            audioJail.Remove(releaseKey);
+        }
     }
 
     public float GetVolumeMusic()
@@ -60,18 +94,38 @@ public class MusicManager : MonoBehaviour
         return userDesiredSoundVolume * GLOBAL_SOUND_VOLUME_MULT;
     }
 
-    public void CreateAudioClip(AudioClip audioClip, float volumeMult = 1.0f)
+    public void CreateAudioClip(AudioClip audioClip, float soundInstanceVolumeMult = 1.0f, bool respectBinning = false)
     {
-        CreateAudioClip(audioClip, transform.position, volumeMult);
+        CreateAudioClip(audioClip, transform.position, soundInstanceVolumeMult, respectBinning);
     }
 
-    public void CreateAudioClip(AudioClip audioClip, Vector3 position, float volumeMult = 1.0f)
+    public void CreateAudioClip(AudioClip audioClip, Vector3 position, float soundInstanceVolumeMult = 1.0f,
+        bool respectBinning = false)
     {
+        // Registering in the jail
+        string clipName = audioClip.name;
+        float jailTime = audioClip.length * 0.42f;
+        if (audioJail.ContainsKey(clipName))
+        {
+            audioJail[clipName] = jailTime;
+            if (respectBinning)
+            {
+                return;
+            }
+        }
+        else
+        {
+            audioJail.Add(clipName, jailTime);
+        }
+
+        // Instancing the sound
         GameObject adp = Instantiate(temporalAudioPlayerPrefab);
         adp.transform.position = position;
         AudioSource source = adp.GetComponent<AudioSource>();
+        TimedLife life = adp.GetComponent<TimedLife>();
+        life.aliveTime = audioClip.length * 2;
         source.clip = audioClip;
-        source.volume = MathF.Min(GetVolumeSound() * volumeMult, 1.0f);
+        source.volume = MathF.Min(GetVolumeSound() * soundInstanceVolumeMult * levelVolumeMult, 1.0f);
         source.Play();
     }
 }

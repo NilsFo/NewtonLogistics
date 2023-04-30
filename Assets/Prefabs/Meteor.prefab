@@ -138,6 +138,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playSound: 1
   impactSound: {fileID: 8300000, guid: 0d40e3afa3a3cf040ab4fd4f90ccbfb6, type: 3}
-  showParticles: 0
-  particleColor: {r: 0, g: 0, b: 0, a: 0}
-  impactParticlePrefab: {fileID: 0}
+  volumeMult: 1
+  respectBinning: 1
+  showParticles: 1
+  particleColor: {r: 0.5529412, g: 0.4431373, b: 0.46274513, a: 1}
+  impactParticlePrefab: {fileID: 473678605313508382, guid: 3128d208d5a807244ab69d5ad208cb78, type: 3}
+  particleScale: 1
+  cameraShake: 1
+  shakeTime: 0.5
+  shakeAmplitude: 1
+  shakeFrequency: 1

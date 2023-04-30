@@ -46,6 +46,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   temporalAudioPlayerPrefab: {fileID: 28961037500586583, guid: bf732b5be21af4141a97da7664b2305d, type: 3}
+  levelVolumeMult: 1
   song: {fileID: 3926763734717314914}
 --- !u!1 &5102638387085009502
 GameObject:
@@ -89,7 +90,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: e35e9fcb183f1784e8d152f465b825b3, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 5c3204f892335324e893edd7bc700ab2, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
