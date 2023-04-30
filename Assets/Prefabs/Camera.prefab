@@ -259,7 +259,7 @@ MonoBehaviour:
   secretFollowObj: {fileID: 8416148781468946026}
   followList: []
   zoomMax: 90
-  orthographicZoomScale: 0.4
+  orthographicZoomScale: 1.25
   orthographicZoomSpeed: 1
 --- !u!1 &8416148781315684823
 GameObject:

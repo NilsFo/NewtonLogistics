@@ -8,11 +8,11 @@ public class KompassBehaviourScript : MonoBehaviour
     [SerializeField] private CircleCollider2D circleCollider2D;
     [SerializeField] private GameStateBehaviourScript gameState;
 
-    private DumpableBehaviourScript[] listOfDumps;
-    private GameObject[] listOfDumpableObj;
+    private DumpableBehaviourScript[] listOfDumps = new DumpableBehaviourScript[0];
+    private GameObject[] listOfDumpableObj = new GameObject[0];
     
-    private DumpStationBehaviourScript[] listOfDumpStations;
-    private GameObject[] listOfDumpStationObj;
+    private DumpStationBehaviourScript[] listOfDumpStations = new DumpStationBehaviourScript[0];
+    private GameObject[] listOfDumpStationObj = new GameObject[0];
     
     private void OnEnable()
     {

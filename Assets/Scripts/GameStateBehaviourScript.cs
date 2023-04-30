@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
@@ -181,9 +182,8 @@ public class GameStateBehaviourScript : MonoBehaviour
             dict[dumb.DumpStationIndex] = dict[dumb.DumpStationIndex] + 1;
         }
         
-        currentStatsArray = new Vector2Int[dict.Keys.Count];
-        for (int i = 0; i < dict.Keys.Count; i++) 
-        {
+        currentStatsArray = new Vector2Int[dict.Keys.Max()+1];
+        foreach (var i in dict.Keys) {
             currentStatsArray[i] = new Vector2Int(0,  dict[i]);
         }
         onDumpListChange.Invoke(listOfDump);

@@ -19,7 +19,7 @@ public class DumpableBehaviourScript : MonoBehaviour
     private void Start()
     {
         Sprite currentSprite = defaultSprite;
-        if (sprites.Length < dumpStationIndex)
+        if (sprites.Length > dumpStationIndex)
             currentSprite = sprites[dumpStationIndex];
         spriteRenderer.sprite = currentSprite;
     }
