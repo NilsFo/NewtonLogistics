@@ -12,7 +12,7 @@ public class Connector : MonoBehaviour {
 
     public Connector couldConnect;
     public SpriteRenderer connectionLine, connectionInsideBtn;
-
+#if UNITY_EDITOR
     private void OnDrawGizmos() {
         switch(connectorState) {
             case ConnectorState.Cargo:
@@ -33,7 +33,7 @@ public class Connector : MonoBehaviour {
         }
         Gizmos.DrawSphere(transform.position, 0.1f);
     }
-
+#endif
     public void Update() {
         if (connectorState is ConnectorState.AttachedOutsideCouldPull or ConnectorState.AttachedOutsidePulling) {
             connectionInsideBtn.enabled = false;

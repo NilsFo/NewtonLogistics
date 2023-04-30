@@ -74,7 +74,7 @@ public class Explosion : MonoBehaviour
 
         _gameStateBehaviourScript.cameraController.AddFollowTarget(gameObject);
     }
-
+#if UNITY_EDITOR
     private void OnDrawGizmos()
     {
         //Debug.DrawLine(transform.position, roamingOrigin);
@@ -88,7 +88,7 @@ public class Explosion : MonoBehaviour
         UnityEditor.Handles.DrawWireDisc(wireOrigin, Vector3.forward,
             explosionRadius * explosionDistanceMultCurve.Evaluate(0.75f));
     }
-
+#endif
     public float GetExplosionRangeProgressPercent()
     {
         return pushCollider.radius / explosionRadius;

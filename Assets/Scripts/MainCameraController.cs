@@ -106,7 +106,7 @@ public class MainCameraController : MonoBehaviour
 
         if (noise != null)
         {
-            print("amp: "+amplitudeGainTarget+" - freq: " + frequencyGainTarget);
+            //print("amp: "+amplitudeGainTarget+" - freq: " + frequencyGainTarget);
             noise.m_AmplitudeGain = Mathf.Lerp(noise.m_AmplitudeGain, amplitudeGainTarget,
                 Time.deltaTime * cameraShakeResetSpeed);
             noise.m_FrequencyGain = Mathf.Lerp(noise.m_FrequencyGain, amplitudeGainTarget,
