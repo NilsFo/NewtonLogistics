@@ -17,6 +17,8 @@ public class DumpableBehaviourScript : MonoBehaviour
     [SerializeField] private Sprite defaultSprite;
     [SerializeField] private Sprite[] sprites;
 
+    [SerializeField] private bool isActive = false;
+    
     private void Start()
     {
         Sprite currentSprite = defaultSprite;
@@ -37,4 +39,10 @@ public class DumpableBehaviourScript : MonoBehaviour
     public Rigidbody2D Rigidbody2D => rigidbody2D;
 
     public Cargo Cargo => cargo;
+
+    public bool IsActive
+    {
+        get => isActive;
+        set => isActive = value;
+    }
 }

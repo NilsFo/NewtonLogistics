@@ -235,3 +235,7 @@ MonoBehaviour:
   prefabContainer: {fileID: 2760945788205986508}
   circleCollider2D: {fileID: 450765341785744930}
   gameState: {fileID: 0}
+  listOfDumps: []
+  listOfDumpableObj: []
+  listOfDumpStations: []
+  listOfDumpStationObj: []

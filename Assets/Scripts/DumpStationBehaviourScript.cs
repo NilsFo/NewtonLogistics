@@ -144,4 +144,6 @@ public class DumpStationBehaviourScript : MonoBehaviour
         listOfInTriggerWrongDump.Remove(dumpableBehaviourScript);
         gameState.SetPoints(stationIndex, listOfOverlapCenterMass.Count);
     }
+
+    public int StationIndex => stationIndex;
 }

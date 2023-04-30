@@ -237,6 +237,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: c84312868fbe8f14c8a03a58ad19a22c, type: 3}
   - {fileID: 21300000, guid: 3c1a1ec226f1f6e4ab90961e2f05f7fc, type: 3}
   - {fileID: 21300000, guid: 2806b2f6825eada43b55b0e39397a1d0, type: 3}
+  isActive: 0
 --- !u!114 &3238917468920190974
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -293,12 +294,36 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
+      - m_Target: {fileID: 1727584643952885220}
+        m_TargetAssemblyTypeName: DumpableBehaviourScript, Assembly-CSharp
+        m_MethodName: set_IsActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
   onDeactivate:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 8629260295490334386}
         m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
         m_MethodName: set_enabled
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1727584643952885220}
+        m_TargetAssemblyTypeName: DumpableBehaviourScript, Assembly-CSharp
+        m_MethodName: set_IsActive
         m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
