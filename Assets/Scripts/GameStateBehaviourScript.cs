@@ -13,23 +13,30 @@ public enum GameState
     Finish
 }
 
+public enum GameLevel
+{
+    None,
+    One,
+    Two,
+    Three,
+    Four,
+    Done
+}
+
 public class GameStateBehaviourScript : MonoBehaviour
 {
     //UnityEvents
-    public UnityEvent onInit;
-    public UnityEvent onIntro;
-    public UnityEvent onPause;
-    public UnityEvent onStart;
-    public UnityEvent onFinish;
-    
+    public UnityEvent<GameLevel,GameState> onGameStateChange;
+
     public UnityEvent<int,Vector2Int> onStatsChange;
-    
     public UnityEvent<DumpableBehaviourScript[]> onDumpListChange;
     public UnityEvent<DumpStationBehaviourScript[]> onDumpStationChange;
     
     //Stats
     [Header("Stats")]
     [SerializeField] private GameState gameState = GameState.Init;
+    [SerializeField] private GameLevel gameLevel = GameLevel.None;
+    
     [SerializeField] private Vector2Int[] currentStatsArray;
     
     // misc
@@ -43,17 +50,9 @@ public class GameStateBehaviourScript : MonoBehaviour
     {
         player = FindObjectOfType<ShipController>();
 
-        if (onInit == null)
-            onInit = new UnityEvent();
-        if (onIntro == null)
-            onIntro = new UnityEvent();
-        if (onPause == null)
-            onPause = new UnityEvent();
-        if (onStart == null)
-            onStart = new UnityEvent();
-        if (onFinish == null)
-            onFinish = new UnityEvent();
-        
+        if (onGameStateChange == null)
+            onGameStateChange = new UnityEvent<GameLevel, GameState>();
+
         if (onStatsChange == null)
             onStatsChange = new UnityEvent<int, Vector2Int>();
         if (onDumpListChange == null)
@@ -66,25 +65,11 @@ public class GameStateBehaviourScript : MonoBehaviour
     {
         FindAllDumpStations();
         FindAllDumpable();
-        ChangeToStart();
+        ChangeGameLevelAndGameState(GameLevel.One, GameState.Init);
     }
 
     public GameState CurrentGameState => gameState;
-
-    public int GetCurrentPoints(int index)
-    {
-        return currentStatsArray[index][0];
-    }
-    
-    public int GetMaxPoints(int index)
-    {
-        return currentStatsArray[index][1];
-    }
-    
-    public Vector2Int GetPointsForIndex(int index)
-    {
-        return currentStatsArray[index];
-    }
+    public GameLevel CurrentGameLevel => gameLevel;
 
     public Vector2Int[] GetStatsArray()
     {
@@ -123,12 +108,62 @@ public class GameStateBehaviourScript : MonoBehaviour
             }
         }
 
-        if (isComplet)
+        if (isComplet && gameState == GameState.Start)
         {
-            this.ChangeToFinish();
+            ChangeGameState(GameState.Finish);
         }
     }
 
+    private GameState NextState()
+    {
+        if (gameState == GameState.Init)
+        {
+            return GameState.Intro;
+        }
+        
+        if (gameState == GameState.Intro)
+        {
+            return GameState.Start;
+        }
+        
+        if (gameState == GameState.Start)
+        {
+            return GameState.Finish;
+        }
+
+        return gameState;
+    }
+
+    private GameLevel NextLevel()
+    {
+        if (gameLevel != GameLevel.None)
+        {
+            return GameLevel.One;
+        }
+        
+        if (gameLevel != GameLevel.One)
+        {
+            return GameLevel.Two;
+        }
+        
+        if (gameLevel != GameLevel.Two)
+        {
+            return GameLevel.Three;
+        }
+        
+        if (gameLevel != GameLevel.Three)
+        {
+            return GameLevel.Four;
+        }
+        
+        if (gameLevel != GameLevel.Four)
+        {
+            return GameLevel.Done;
+        }
+
+        return gameLevel;
+    }
+    
     private void FindAllDumpable()
     {
         listOfDump = FindObjectsByType<DumpableBehaviourScript>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
@@ -165,34 +200,55 @@ public class GameStateBehaviourScript : MonoBehaviour
     }
     
     #region EventFunctions
-    public void ChangeToInit()
+
+    public void ChangeGameLevel(GameLevel level)
     {
+        gameLevel = level;
         gameState = GameState.Init;
-        onInit.Invoke();
+        onGameStateChange.Invoke(gameLevel, gameState);
     }
     
-    public void ChangeToIntro()
+    public void ChangeGameState(GameState state)
     {
-        gameState = GameState.Intro;
-        onInit.Invoke();
+        gameState = state;
+        onGameStateChange.Invoke(gameLevel, gameState);
+    }
+
+    public void ChangeGameLevelAndGameState(GameLevel level, GameState state)
+    {
+        gameLevel = level;
+        gameState = state;
+        onGameStateChange.Invoke(gameLevel, gameState);
+    }
+
+    public void ChangeToLevelNone()
+    {
+        ChangeGameLevelAndGameState(GameLevel.None, GameState.Init);
     }
     
-    public void ChangeToPause()
+    public void ChangeToLevelDone()
     {
-        gameState = GameState.Pause;
-        onPause.Invoke();
+        ChangeGameLevelAndGameState(GameLevel.Done, GameState.Init);
     }
     
-    public void ChangeToStart()
+    public void ChangeToLevelOne()
     {
-        gameState = GameState.Start;
-        onStart.Invoke();
+        ChangeGameLevelAndGameState(GameLevel.One, GameState.Init);
     }
     
-    public void ChangeToFinish()
+    public void ChangeToLevelTwo()
     {
-        gameState = GameState.Finish;
-        onFinish.Invoke();
+        ChangeGameLevelAndGameState(GameLevel.Two, GameState.Init);
+    }
+    
+    public void ChangeToLevelThree()
+    {
+        ChangeGameLevelAndGameState(GameLevel.Three, GameState.Init);
+    }
+    
+    public void ChangeToLeveFour()
+    {
+        ChangeGameLevelAndGameState(GameLevel.Four, GameState.Init);
     }
     
     #endregion 
