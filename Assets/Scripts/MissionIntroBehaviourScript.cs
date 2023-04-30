@@ -73,13 +73,14 @@ public class MissionIntroBehaviourScript : MonoBehaviour
     private void PlayIntroLevelOne()
     {
         inPlaying = true;
-        introTime = 5f;
+        introTime = 0f;
         currentTime = 0f;
-        phaseStack = new Stack<Tuple<float, Action>>();
+        /*phaseStack = new Stack<Tuple<float, Action>>();
         phaseStack.Push(new Tuple<float, Action>(4f, IntroLevelOnePhaseFour));
         phaseStack.Push(new Tuple<float, Action>(3f, IntroLevelOnePhaseThree));
         phaseStack.Push(new Tuple<float, Action>(2f, IntroLevelOnePhaseTwo));
         phaseStack.Push(new Tuple<float, Action>(1f, IntroLevelOnePhaseOne));
+        */
     }
 
     #region IntroLevelOne
