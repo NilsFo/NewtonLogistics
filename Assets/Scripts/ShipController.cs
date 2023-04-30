@@ -131,7 +131,7 @@ public class ShipController : MonoBehaviour {
         if (kb.fKey.isPressed || kb.spaceKey.isPressed) {
             _magnetOn = true;
         }
-        if (kb.digit1Key.wasPressedThisFrame) {
+        if (kb.digit1Key.wasPressedThisFrame || kb.rKey.wasPressedThisFrame) {
             Disconnect(0, kb.shiftKey.isPressed);
         }
         if (kb.digit2Key.wasPressedThisFrame) {
