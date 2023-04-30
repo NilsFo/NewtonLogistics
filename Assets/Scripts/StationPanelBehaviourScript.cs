@@ -45,6 +45,7 @@ public class StationPanelBehaviourScript : MonoBehaviour
             maxState = values[1];
             currentState = values[0];
             InitLabels();
+            UpdateState();
         }
     }
 
