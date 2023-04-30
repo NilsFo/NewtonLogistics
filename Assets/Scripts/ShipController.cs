@@ -99,10 +99,10 @@ public class ShipController : MonoBehaviour {
         if (kb.sKey.isPressed) {
             _fThrustOn = true;
         }
-        if (kb.qKey.isPressed) {
+        if (kb.eKey.isPressed) {
             _rbThrustOn = _rfThrustOn = true;
         }
-        if (kb.eKey.isPressed) {
+        if (kb.qKey.isPressed) {
             _lbThrustOn = _lfThrustOn = true;
         }
         if (kb.aKey.isPressed) {
@@ -111,7 +111,7 @@ public class ShipController : MonoBehaviour {
         if (kb.dKey.isPressed) {
             _rbThrustOn = _lfThrustOn = true;
         }
-        if (kb.fKey.isPressed) {
+        if (kb.fKey.isPressed || kb.spaceKey.isPressed) {
             _magnetOn = true;
         }
         if (kb.digit1Key.wasPressedThisFrame) {
@@ -198,6 +198,18 @@ public class ShipController : MonoBehaviour {
             }
         }
     }
+
+    private int AddInsideConnection(Connector shipConnector, Connector cargoConnector) {
+        
+        for (int i = 0; i < _insideConnectors.Length; i++) {
+            if (_insideConnectors [i] == (null, null)) {
+                _insideConnectors [i] = (shipConnector, cargoConnector);
+                return i;
+            }
+        }
+        Debug.LogWarning("Could not connect cargo, is the maximum number of connections reached?");
+        return -1;
+    }
     
     private void Connect(Connector shipConnector, Cargo cargo, Connector cargoConnector) {
         if (cargo.cargoState == Cargo.CargoState.Attached) {
@@ -205,6 +217,11 @@ public class ShipController : MonoBehaviour {
             return;
         }
 
+        int insideConnectionIndex = AddInsideConnection(shipConnector, cargoConnector);
+        if (insideConnectionIndex == -1) {
+            return;
+        }
+        
         cargoConnector.connectorState = Connector.ConnectorState.AttachedInside;
         shipConnector.connectorState = Connector.ConnectorState.AttachedInside;
 
@@ -224,13 +241,7 @@ public class ShipController : MonoBehaviour {
         angle = Mathf.Round(angle / 90f) * 90f;
         cargo.transform.rotation = Quaternion.Euler(0,0, transform.rotation.eulerAngles.z + angle);*/
 
-        for (int i = 0; i < _insideConnectors.Length; i++) {
-            if (_insideConnectors [i] == (null, null)) {
-                _insideConnectors [i] = (shipConnector, cargoConnector);
-                break;
-            }
-            Debug.LogWarning("Could not connect cargo, is the maximum number of connections reached?");
-        }
+        
         outsideConnectors.Remove(shipConnector);
         foreach (var cargoCon in cargo.connectors) {
             cargoCon.gameObject.layer = LayerMask.NameToLayer("Ship");
@@ -239,9 +250,16 @@ public class ShipController : MonoBehaviour {
             }
         }
         
-        var joint = cargo.AddComponent<FixedJoint2D>();
-        joint.connectedBody = rb;
+        var joint = cargo.AddComponent<HingeJoint2D>();
+        joint.autoConfigureConnectedAnchor = false;
+        joint.connectedBody = shipConnector.GetComponentInParent<Rigidbody2D>();
         joint.anchor = cargoConnector.transform.localPosition;
+        joint.connectedAnchor = shipConnector.transform.localPosition;
+        joint.limits = new JointAngleLimits2D() {
+            min = -3f, max = 3f
+        };
+        joint.useLimits = true;
+
     }
 
     public void Disconnect(int index) {
@@ -264,7 +282,7 @@ public class ShipController : MonoBehaviour {
         }
         cargo.transform.parent = null;
         cargo.cargoState = Cargo.CargoState.Free;
-        Destroy(cargo.GetComponent<FixedJoint2D>());
+        Destroy(cargo.GetComponent<HingeJoint2D>());
         foreach (var cargoConnector in cargo.connectors) {
             cargoConnector.connectorState = Connector.ConnectorState.Cargo;
             outsideConnectors.Remove(cargoConnector);
