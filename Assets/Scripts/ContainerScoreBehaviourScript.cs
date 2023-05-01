@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -11,8 +12,10 @@ public class ContainerScoreBehaviourScript : MonoBehaviour
     
     [SerializeField] private GameStateBehaviourScript gameState;
 
+    [SerializeField] private GameObject[] listOfContainerObj;
+    [SerializeField] private GameObject[] listOfStationObj;
+
     private StationPanelBehaviourScript[] _stationPanels;
-    private DumpStationBehaviourScript[] listOfStations;
     
     private void Start()
     {
@@ -20,45 +23,48 @@ public class ContainerScoreBehaviourScript : MonoBehaviour
         CreateStationPanels();
     }
 
+    private void OnEnable()
+    {
+        gameState.onCurrentLevelListChange.AddListener(OnCurrentLevelListChange);
+    }
+
+    private void OnDisable()
+    {
+        gameState.onCurrentLevelListChange.RemoveListener(OnCurrentLevelListChange);
+    }
+
+    
+    private void OnCurrentLevelListChange(GameObject[] listOfStations, GameObject[] listOfContainer)
+    {
+        listOfContainerObj = listOfStations;
+        listOfStationObj = listOfContainer;
+        
+        CleanStationPanels();
+        CreateStationPanels();
+    }
+    
     private void CleanStationPanels()
     {
         if(_stationPanels == null) return;
         for (int i = 0; i < _stationPanels.Length; i++)
         {
-            StationPanelBehaviourScript panel = _stationPanels[i];
-            Destroy(panel.gameObject);
+            GameObject panel = _stationPanels[i].gameObject;
+            Destroy(panel);
         }
         _stationPanels = null;
     }
 
     private void CreateStationPanels()
     {
-        if(listOfStations == null) return;
-        _stationPanels = new StationPanelBehaviourScript[listOfStations.Length];
-        for (int i = 0; i < listOfStations.Length; i++)
+        if(listOfStationObj == null) return;
+        _stationPanels = new StationPanelBehaviourScript[listOfStationObj.Length];
+        for (int i = 0; i < listOfStationObj.Length; i++)
         {
-            DumpStationBehaviourScript station = listOfStations[i];
+            GameObject station = listOfStationObj[i];
             GameObject obj = Instantiate(prefabStationLabel, container.transform);
             obj.SetActive(true);
             _stationPanels[i] = obj.GetComponent<StationPanelBehaviourScript>();
-            _stationPanels[i].Init(i);
+            _stationPanels[i].Init(station);
         }
-    }
-    
-    private void OnEnable()
-    {
-        gameState.onDumpStationChange.AddListener(OnStationListChange);
-    }
-
-    private void OnDisable()
-    {
-        gameState.onDumpStationChange.RemoveListener(OnStationListChange);
-    }
-
-    private void OnStationListChange(DumpStationBehaviourScript[] list)
-    {
-        listOfStations = list;
-        CleanStationPanels();
-        CreateStationPanels();
     }
 }

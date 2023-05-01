@@ -8,7 +8,6 @@ using UnityEngine.UI;
 
 public class StationPanelBehaviourScript : MonoBehaviour
 {
-    [SerializeField] private GameStateBehaviourScript gameState;
     [SerializeField] private TextMeshProUGUI nameLable;
     
     [SerializeField] private GameObject prefabLabel;
@@ -16,54 +15,34 @@ public class StationPanelBehaviourScript : MonoBehaviour
 
     [SerializeField] private Image[] images;
     
-    [SerializeField] private int stationIndex = 0;
-    [SerializeField] private int currentState = 0;
-    [SerializeField] private int maxState = 0;
-
     [SerializeField] private Sprite offSprite;
     [SerializeField] private Sprite onSprite;
 
-    private void Awake()
+    [SerializeField] private GameObject stationObj;
+    [SerializeField] private DumpStationBehaviourScript stationBehaviourScript;
+        
+    public void Init(GameObject station)
     {
-        gameState = FindObjectOfType<GameStateBehaviourScript>();
-    }
-
-    private void OnEnable()
-    {
-        gameState.onStatsChange.AddListener(OnStatsChange);
-    }
-
-    private void OnDisable()
-    {
-        gameState.onStatsChange.RemoveListener(OnStatsChange);
-    }
-
-    private void OnStatsChange(int index, Vector2Int values)
-    {
-        if (index == stationIndex)
+        stationObj = station;
+        stationBehaviourScript = stationObj.GetComponent<DumpStationBehaviourScript>();
+        if (stationBehaviourScript != null)
         {
-            maxState = values[1];
-            currentState = values[0];
-            InitLabels();
-            UpdateState();
+            nameLable.text = stationBehaviourScript.GetStationName();
         }
+        InitLabels();
     }
 
-    public void Init(int index)
+    private void Update()
     {
-        stationIndex = index;
-        nameLable.text = "Station " + (index + 1);
-        maxState = 0;
-        currentState = 0;
-        InitLabels();
         UpdateState();
     }
 
     public void UpdateState()
     {
-        if(0 > currentState || currentState >= maxState) return;
+        int currentState = stationBehaviourScript.GetContainerCount();
+        if(0 > currentState || currentState >= stationBehaviourScript.MAXContainerCount) return;
         
-        for (int i = 0; i < maxState; i++)
+        for (int i = 0; i < stationBehaviourScript.MAXContainerCount; i++)
         {
             if (i < currentState)
             {
@@ -79,7 +58,7 @@ public class StationPanelBehaviourScript : MonoBehaviour
     private void InitLabels()
     {
         CleanLabels();
-        images = new Image[maxState];
+        images = new Image[stationBehaviourScript.MAXContainerCount];
         for (int i = 0; i < images.Length; i++)
         {
             GameObject obj = Instantiate(prefabLabel, container.transform);

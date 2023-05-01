@@ -1,7 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -28,18 +25,26 @@ public class GameStateBehaviourScript : MonoBehaviour
 {
     //UnityEvents
     public UnityEvent<GameLevel,GameState> onGameStateChange;
-
-    public UnityEvent<int,Vector2Int> onStatsChange;
-    public UnityEvent<DumpableBehaviourScript[]> onDumpListChange;
-    public UnityEvent<DumpStationBehaviourScript[]> onDumpStationChange;
+    public UnityEvent<GameObject[],GameObject[]> onCurrentLevelListChange;
+    
+    [Header("Level")]
+    [SerializeField] private GameObject[] listContainerForLevelOne;
+    [SerializeField] private GameObject[] listStationForLevelOne;
+    
+    [SerializeField] private GameObject[] listContainerForLevelTwo;
+    [SerializeField] private GameObject[] listStationForLevelTwo;
+    
+    [SerializeField] private GameObject[] listContainerForLevelThree;
+    [SerializeField] private GameObject[] listStationForLevelThree;
+    
+    [SerializeField] private GameObject[] listContainerForLevelFour;
+    [SerializeField] private GameObject[] listStationForLevelFour;
     
     //Stats
     [Header("Stats")]
     [SerializeField] private GameState gameState = GameState.Init;
     [SerializeField] private GameLevel gameLevel = GameLevel.None;
-    
-    [SerializeField] private Vector2Int[] currentStatsArray;
-    
+
     // misc
     public ShipController player;
     public MainCameraController cameraController;
@@ -49,6 +54,10 @@ public class GameStateBehaviourScript : MonoBehaviour
     [SerializeField] private DumpableBehaviourScript[] listOfDump;
     [SerializeField] private DumpStationBehaviourScript[] listOfDumpStations;
 
+    [SerializeField] private GameObject[] currentLevelListOfContainer;
+    [SerializeField] private GameObject[] currentLevelListOfStations;
+    [SerializeField] private Dictionary<string, int> points;
+
     private void Awake()
     {
         player = FindObjectOfType<ShipController>();
@@ -57,19 +66,14 @@ public class GameStateBehaviourScript : MonoBehaviour
         
         if (onGameStateChange == null)
             onGameStateChange = new UnityEvent<GameLevel, GameState>();
+        if (onCurrentLevelListChange == null)
+            onCurrentLevelListChange = new UnityEvent<GameObject[], GameObject[]>();
 
-        if (onStatsChange == null)
-            onStatsChange = new UnityEvent<int, Vector2Int>();
-        if (onDumpListChange == null)
-            onDumpListChange = new UnityEvent<DumpableBehaviourScript[]>();
-        if (onDumpStationChange == null)
-            onDumpStationChange = new UnityEvent<DumpStationBehaviourScript[]>();
+        points = new Dictionary<string, int>();
     }
 
     void Start()
     {
-        FindAllDumpStations();
-        FindAllDumpable();
         musicManager.PlaySongLoop();
         ChangeGameLevelAndGameState(gameLevel, gameState);
     }
@@ -80,53 +84,33 @@ public class GameStateBehaviourScript : MonoBehaviour
         {
             ChangeGameState(GameState.Intro);
         }
-
-        if (gameState == GameState.Finish)
+        else if (gameState == GameState.Finish)
         {
             ChangeGameLevelAndGameState(NextLevel(),GameState.Init);
         }
-    }
-
-    public GameState CurrentGameState => gameState;
-    public GameLevel CurrentGameLevel => gameLevel;
-
-    public Vector2Int[] GetStatsArray()
-    {
-        return currentStatsArray;
-    }
-
-    public bool SetPoints(int index, int points)
-    {
-        int currentPoints = points;
-        if (currentPoints >= currentStatsArray[index][1])
+        else if (gameState == GameState.Start)
         {
-            //Max Points reached! try to add more Points than possible!
-            currentPoints = currentStatsArray[index][1];
+            CheckPointCompleteness();
         }
-        if (currentPoints <= 0)
-        {
-            //Min Points reached! try to remove more Points than possible!
-            currentPoints = 0;
-        }
-        currentStatsArray[index][0] = currentPoints;
-        onStatsChange.Invoke(index, currentStatsArray[index]);
-        CheckPointCompleteness();
-        return true;
     }
 
     private void CheckPointCompleteness()
     {
-        bool isComplet = true;
-        for (int i = 0; i < currentStatsArray.Length; i++)
+        int sumOfContainerInStation = 0;
+        points = new Dictionary<string, int>();
+        for (int i = 0; i < currentLevelListOfStations.Length; i++)
         {
-            Vector2Int stats = currentStatsArray[i];
-            if (stats[0] != stats[1])
+            GameObject obj = currentLevelListOfStations[i];
+            DumpStationBehaviourScript station = obj.GetComponent<DumpStationBehaviourScript>();
+            if (station != null)
             {
-                isComplet = false;
-                break;
+                points.Add(station.GetStationName(), station.GetContainerCount());
+                sumOfContainerInStation += station.GetContainerCount();
+
             }
         }
-
+            
+        bool isComplet = (sumOfContainerInStation == currentLevelListOfContainer.Length);
         if (isComplet && gameState == GameState.Start)
         {
             ChangeGameState(GameState.Finish);
@@ -182,81 +166,108 @@ public class GameStateBehaviourScript : MonoBehaviour
 
         return GameLevel.Done;
     }
-    
-    private void FindAllDumpable()
-    {
-        DumpableBehaviourScript[] tempList =  FindObjectsByType<DumpableBehaviourScript>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
-        List<DumpableBehaviourScript> activeList = new List<DumpableBehaviourScript>();
-        //Dump Aktive
-        for (int i = 0; i < tempList.Length; i++)
-        {
-            DumpableBehaviourScript dump = tempList[i];
-            if(dump.IsActive) activeList.Add(dump);
-        }
-
-        listOfDump = activeList.ToArray();
-        onDumpListChange.Invoke(listOfDump);
-        
-        //Points
-        currentStatsArray = new Vector2Int[listOfDumpStations.Length];
-        Dictionary<int, int> dict = new Dictionary<int, int>();
-        for (int i = 0; i < listOfDump.Length; i++)
-        {
-            DumpableBehaviourScript dumb = listOfDump[i];
-            if (!dict.ContainsKey(dumb.DumpStationIndex))
-            {
-                dict[dumb.DumpStationIndex] = 0;
-            }
-            dict[dumb.DumpStationIndex] = dict[dumb.DumpStationIndex] + 1;
-        }
-
-        for (int i = 0; i < currentStatsArray.Length; i++)
-        {
-            if (dict.ContainsKey(i))
-            {
-                currentStatsArray[i] = new Vector2Int(0, dict[i]);
-                onStatsChange.Invoke(i, currentStatsArray[i]);
-            }
-        }
-    }
-
-    public void FindAllDumpStations()
-    {
-        DumpStationBehaviourScript[] tempList = FindObjectsByType<DumpStationBehaviourScript>(FindObjectsInactive.Exclude, FindObjectsSortMode.InstanceID);
-        DumpStationBehaviourScript[] newArray = new DumpStationBehaviourScript[tempList.Length];
-        for (int i = 0; i < tempList.Length; i++)
-        {
-            DumpStationBehaviourScript station = tempList[i];
-            newArray[station.StationIndex] = station;
-        }
-
-        listOfDumpStations = newArray;
-        onDumpStationChange.Invoke(listOfDumpStations);
-    }
-    
-    #region EventFunctions
 
     public void ChangeGameLevel(GameLevel level)
     {
-        gameLevel = level;
-        gameState = GameState.Init;
-        onGameStateChange.Invoke(gameLevel, gameState);
+        ChangeGameLevelAndGameState(level, GameState.Init);
     }
     
     public void ChangeGameState(GameState state)
     {
-        gameState = state;
-        onGameStateChange.Invoke(gameLevel, gameState);
-        if(gameState == GameState.Start) FindAllDumpable();
+        ChangeGameLevelAndGameState(gameLevel, state);
     }
 
     public void ChangeGameLevelAndGameState(GameLevel level, GameState state)
     {
+        if (state == GameState.Init)
+        {
+            EnableLevel(level);
+        }
+
+        if (state == GameState.Finish)
+        {
+            DisableCurrentLevel();
+        }
+
         gameLevel = level;
         gameState = state;
+        //Fire Event 
         onGameStateChange.Invoke(gameLevel, gameState);
+        onCurrentLevelListChange.Invoke(currentLevelListOfStations, currentLevelListOfContainer);
     }
 
+    public void EnableLevel(GameLevel level)
+    {
+        GameObject[] listStation = new GameObject[0];
+        GameObject[] listContainer = new GameObject[0];
+
+        Dictionary<int, int> counter = new Dictionary<int, int>();
+        
+        if (level == GameLevel.One)
+        {
+            listStation = listStationForLevelOne;
+            listContainer = listContainerForLevelOne;
+        }
+        else if (level == GameLevel.Two)
+        {
+            listStation = listStationForLevelTwo;
+            listContainer = listContainerForLevelTwo;
+        }
+        else if (level == GameLevel.Three)
+        {
+            listStation = listStationForLevelThree;
+            listContainer = listContainerForLevelThree;
+        }
+        else if (level == GameLevel.Four)
+        {
+            listStation = listStationForLevelFour;
+            listContainer = listContainerForLevelFour;
+        }
+        
+        currentLevelListOfContainer = listContainer;
+        for (int i = 0; i < listContainer.Length; i++)
+        {
+            GameObject objToEnable = listContainer[i];
+            DumpableBehaviourScript dump = objToEnable.GetComponent<DumpableBehaviourScript>();
+            if (dump != null)
+            {
+                if(!counter.ContainsKey(dump.DumpStationIndex)) counter.Add(dump.DumpStationIndex, 0);
+                counter[dump.DumpStationIndex] = counter[dump.DumpStationIndex] + 1;
+            }
+            objToEnable.SetActive(true);
+        }
+        
+        //Set Max Count
+        currentLevelListOfStations = listStation;
+        for (int i = 0; i < listStation.Length; i++)
+        {
+            GameObject objToEnable = listStation[i];
+            DumpStationBehaviourScript station = objToEnable.GetComponent<DumpStationBehaviourScript>();
+            if (station != null)
+            {
+                if (counter.ContainsKey(station.StationIndex))
+                {
+                    station.SetMaxCountContainer(counter[station.StationIndex]);
+                }
+            }
+        }
+    }
+    
+    public void DisableCurrentLevel()
+    {
+        for (int i = 0; i < currentLevelListOfContainer.Length; i++)
+        {
+            GameObject objToDisable = currentLevelListOfContainer[i];
+            //Trigger Script
+            objToDisable.SetActive(false);
+        }
+        
+        currentLevelListOfContainer = new GameObject[0];
+        currentLevelListOfStations = new GameObject[0];
+    }
+
+    #region EventFunctions
+    
     public void ChangeToLevelNone()
     {
         ChangeGameLevelAndGameState(GameLevel.None, GameState.Init);

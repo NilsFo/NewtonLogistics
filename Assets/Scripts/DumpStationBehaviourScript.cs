@@ -1,24 +1,21 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Events;
 
 public class DumpStationBehaviourScript : MonoBehaviour
 {
     [Header("Ref")]
     [SerializeField] private Collider2D myCollider2D;
-    [SerializeField] private GameStateBehaviourScript gameState;
     [SerializeField] private TextMeshProUGUI textLabel;
     [SerializeField] private Transform generalAttractorPoint = null;
     [SerializeField] private Transform[] specificAttractorPoint = new Transform[0];
         
     [Header("Config")]
     [SerializeField] private int stationIndex;
+    [SerializeField] private string stationName;
     [SerializeField] private float pushPower = 5f;
-
+    [SerializeField] private int maxContainerCount = 0;
+    
     [Header("Debug")]
     [SerializeField] private List<DumpableBehaviourScript> listOfInTrigger;
     [SerializeField] private List<DumpableBehaviourScript> listOfInTriggerWrongDump;
@@ -44,7 +41,6 @@ public class DumpStationBehaviourScript : MonoBehaviour
     private void Start()
     {
         textLabel.text = "" + (stationIndex + 1);
-        gameState = FindObjectOfType<GameStateBehaviourScript>();
     }
 
     // Update is called once per frame
@@ -56,12 +52,11 @@ public class DumpStationBehaviourScript : MonoBehaviour
             for (int i = 0; i < listOfInTrigger.Count; i++)
             {
                 DumpableBehaviourScript dump = listOfInTrigger[i];
-                if (myCollider2D.OverlapPoint(dump.GetPointOfIntrest()))
+                if (myCollider2D.OverlapPoint(dump.GetPointOfIntrest()) && dump.DumpStationIndex == stationIndex)
                 {
                     listOfOverlapCenterMass.Add(dump);
                 }
             }
-            gameState.SetPoints(stationIndex, listOfOverlapCenterMass.Count);
         }
 
         if (listOfInTriggerWrongDump.Count > 0)
@@ -142,8 +137,24 @@ public class DumpStationBehaviourScript : MonoBehaviour
         listOfInTrigger.Remove(dumpableBehaviourScript);
         listOfOverlapCenterMass.Remove(dumpableBehaviourScript);
         listOfInTriggerWrongDump.Remove(dumpableBehaviourScript);
-        gameState.SetPoints(stationIndex, listOfOverlapCenterMass.Count);
     }
 
     public int StationIndex => stationIndex;
+
+    public int GetContainerCount()
+    {
+        return listOfOverlapCenterMass.Count;
+    }
+
+    public string GetStationName()
+    {
+        return stationName;
+    }
+
+    public void SetMaxCountContainer(int i)
+    {
+        maxContainerCount = i;
+    }
+
+    public int MAXContainerCount => maxContainerCount;
 }
