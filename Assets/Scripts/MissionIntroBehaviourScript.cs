@@ -227,7 +227,7 @@ public class MissionIntroBehaviourScript : MonoBehaviour
     
     void IntroLevelThreePhaseOne()
     {
-        dialogueManager.RequestRadioMessage("We have a hull breach in the western corridor. Grab what's left and bring it back.", msgTimer);
+        dialogueManager.RequestRadioMessage("We have a hull breach in the eastern corridor. Grab what's left and bring it back.", msgTimer);
     }
     
 
@@ -237,7 +237,7 @@ public class MissionIntroBehaviourScript : MonoBehaviour
     
     void IntroLevelFourPhaseOne()
     {
-        dialogueManager.RequestRadioMessage("New delivery from the train station. Get your ship over to the east and bring the lot back.", msgTimer);
+        dialogueManager.RequestRadioMessage("New delivery from the train station. Get your ship over to the west and bring the lot back.", msgTimer);
     }
     void IntroLevelFourPhaseTwo()
     {
