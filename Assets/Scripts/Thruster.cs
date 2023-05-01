@@ -7,7 +7,7 @@ public class Thruster : MonoBehaviour {
     private SpriteRenderer _spriteRenderer;
     // Start is called before the first frame update
     void Start() {
-        _spriteRenderer = GetComponent<SpriteRenderer>();
+        //_spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     // Update is called once per frame
@@ -17,10 +17,10 @@ public class Thruster : MonoBehaviour {
     }
 
     public void SetViz(bool active) {
-        if (active != _vizActive) {
+        /*if (active != _vizActive) {
             _vizActive = active;
             _spriteRenderer.color = active ? Color.yellow : Color.white;
-        }
+        }*/
     }
     
 }

@@ -8,11 +8,11 @@ using UnityEngine.Serialization;
 public class MainCameraController : MonoBehaviour
 {
     private GameStateBehaviourScript _gameState;
-    private CinemachineVirtualCamera virtualCamera;
+    public CinemachineVirtualCamera virtualCamera;
     public GameObject cameraObj;
     public Transform CameraPos => cameraObj.transform;
     public GameObject secretFollowObj;
-    private Camera camera;
+    public Camera camera;
     private CinemachineBasicMultiChannelPerlin noise;
 
     [Header("Who to look at?")] public List<GameObject> followList;
@@ -53,14 +53,15 @@ public class MainCameraController : MonoBehaviour
             ResetFollowToPlayer();
         }
 
-        camera = Camera.main;
-        var brain = (camera == null) ? null : camera.GetComponent<CinemachineBrain>();
-        virtualCamera = (brain == null) ? null : brain.ActiveVirtualCamera as CinemachineVirtualCamera;
-        if (virtualCamera != null)
-        {
-            virtualCamera.m_Lens.OrthographicSize = zoomMinNear;
-            noise = virtualCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
-        }
+        // camera = Camera.main;
+        // var brain = (camera == null) ? null : camera.GetComponent<CinemachineBrain>();
+        // virtualCamera = (brain == null) ? null : brain.ActiveVirtualCamera as CinemachineVirtualCamera;
+        // if (virtualCamera != null)
+        // {
+        //     virtualCamera.m_Lens.OrthographicSize = zoomMinNear;
+        //     noise = virtualCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
+        // }
+        noise = virtualCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
     }
 
     public void ShakeCamera(float amplitudeGain, float frequencyGain, float duration)
