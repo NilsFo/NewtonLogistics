@@ -13,11 +13,13 @@ public class DialogueBox : MonoBehaviour
     public float secondsPerCharacter = 0.02f;
     private float textBuildDelta = 0f;
     public float lifetime = 5f;
+    public AudioClip radioStatic;
     
 
     // Start is called before the first frame update
     void Start()
     {
+        FindObjectOfType<MusicManager>().CreateAudioClip(radioStatic, 0.7f);
     }
 
     // Update is called once per frame
