@@ -153,7 +153,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1663848317803425454
 RectTransform:
   m_ObjectHideFlags: 0
@@ -423,7 +423,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   myCollider2D: {fileID: 7259827375012318242}
-  textLabel: {fileID: 3615136819091807295}
   generalAttractorPoint: {fileID: 871507255699748531}
   generalPushPoint: {fileID: 4731069255376279725}
   stationIndex: 0
@@ -431,9 +430,11 @@ MonoBehaviour:
   pushPower: 1
   suckPower: 5
   maxContainerCount: 0
+  currentLevelSuck: 0
   listOfInTrigger: []
   listOfInTriggerWrongDump: []
   listOfOverlapCenterMass: []
+  listOfSuck: []
 --- !u!1 &7259827376171170499
 GameObject:
   m_ObjectHideFlags: 0
