@@ -273,8 +273,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3d68f3cfbeab954680d075916bd25a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  virtualCamera: {fileID: 8416148781769224375}
   cameraObj: {fileID: 8416148781040691596}
   secretFollowObj: {fileID: 8416148781468946026}
+  camera: {fileID: 8416148781040691598}
   followList: []
   zoomMax: 90
   zoomMinNear: 20

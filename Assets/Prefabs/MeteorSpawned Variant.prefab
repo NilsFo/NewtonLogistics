@@ -7,6 +7,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -5894532851670657986, guid: 2e1f0895d57e39b48930e3813940487c, type: 3}
+      propertyPath: torqueEnabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7582797510869857794, guid: 2e1f0895d57e39b48930e3813940487c, type: 3}
       propertyPath: m_RootOrder
       value: 0
