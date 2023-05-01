@@ -117,6 +117,7 @@ MonoBehaviour:
   outsideConnectors:
   - {fileID: 9194351530212971355}
   connectedCargo: []
+  firedClip: {fileID: 8300000, guid: c35ee87b57226e747b9276e5b47f99e8, type: 3}
   thrusterSound: {fileID: 4382781723140761545}
   clickSound: {fileID: 4104271553777813341}
   releaseSound: {fileID: 3199651150615231474}
@@ -705,7 +706,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: d7f4fa9de5c8f144c864f00668e2100e, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 0.636
+  m_Volume: 1
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -833,7 +834,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 7017672950e2d2c43a40599f493e8859, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 0.636
+  m_Volume: 1
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -961,7 +962,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 5e970c27547500e44918fe6b3d6f6f67, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0
+  m_Volume: 1
   m_Pitch: 1
   Loop: 1
   Mute: 0

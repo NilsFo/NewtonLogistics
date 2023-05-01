@@ -72,12 +72,17 @@ public class GameStateBehaviourScript : MonoBehaviour
 
     private int playerRequestsQuitCounter = 0;
     private bool playerRequestsQuitWasReleased = true;
+
+    public AudioClip nextLevelSound;
+    public AudioClip cargoCollectSound;
+    public float soundBlockerTimer;
     
     private void Awake()
     {
         player = FindObjectOfType<ShipController>();
         cameraController = FindObjectOfType<MainCameraController>();
         musicManager = FindObjectOfType<MusicManager>();
+        soundBlockerTimer = 5;
         
         if (onGameStateChange == null)
             onGameStateChange = new UnityEvent<GameLevel, GameState>();
@@ -146,13 +151,15 @@ public class GameStateBehaviourScript : MonoBehaviour
 
     private void Update()
     {
+        soundBlockerTimer -= Time.deltaTime;
+        
         if (gameState == GameState.Init)
         {
             ChangeGameState(GameState.Intro);
         }
         else if (gameState == GameState.Finish && gameLevel != GameLevel.Done)
         {
-            ChangeGameLevelAndGameState(NextLevel(),GameState.Init);
+            ChangeGameLevelAndGameState(NextLevel(true),GameState.Init);
         }
         else if (gameState == GameState.Start)
         {
@@ -253,35 +260,41 @@ public class GameStateBehaviourScript : MonoBehaviour
         return gameState;
     }
 
-    private GameLevel NextLevel()
+    private GameLevel NextLevel(bool playAudio)
     {
         if (gameLevel == GameLevel.None)
         {
+            PlayNextLevelSong();
             return GameLevel.One;
         }
         
         if (gameLevel == GameLevel.One)
         {
+            PlayNextLevelSong();
             return GameLevel.Two;
         }
         
         if (gameLevel == GameLevel.Two)
         {
+            PlayNextLevelSong();
             return GameLevel.Three;
         }
         
         if (gameLevel == GameLevel.Three)
         {
+            PlayNextLevelSong();
             return GameLevel.Four;
         }
         
         if (gameLevel == GameLevel.Four)
         {
+            PlayNextLevelSong();
             return GameLevel.Five;
         }
         
         if (gameLevel == GameLevel.Five)
         {
+            PlayNextLevelSong();
             return GameLevel.Six;
         }
         
@@ -291,6 +304,22 @@ public class GameStateBehaviourScript : MonoBehaviour
         }
 
         return GameLevel.Done;
+    }
+
+    public void PlayNextLevelSong()
+    {
+        if (soundBlockerTimer <  0)
+        {
+            musicManager.CreateAudioClip(nextLevelSound,player.transform.position);
+        }
+    }
+
+    public void PlayCollectSong()
+    {
+        if (soundBlockerTimer < 0)
+        {
+            musicManager.CreateAudioClip(cargoCollectSound, player.transform.position);
+        }
     }
 
     public void ChangeGameLevel(GameLevel level)
