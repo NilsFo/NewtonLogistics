@@ -58,7 +58,7 @@ public class MainCameraController : MonoBehaviour
         virtualCamera = (brain == null) ? null : brain.ActiveVirtualCamera as CinemachineVirtualCamera;
         if (virtualCamera != null)
         {
-            zoomMinNear = virtualCamera.m_Lens.OrthographicSize;
+            virtualCamera.m_Lens.OrthographicSize = zoomMinNear;
             noise = virtualCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
         }
     }
