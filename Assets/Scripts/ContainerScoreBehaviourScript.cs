@@ -1,9 +1,4 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Events;
 
 public class ContainerScoreBehaviourScript : MonoBehaviour
 {
@@ -19,6 +14,7 @@ public class ContainerScoreBehaviourScript : MonoBehaviour
     
     private void Start()
     {
+        _stationPanels = new StationPanelBehaviourScript[0];
         CleanStationPanels();
         CreateStationPanels();
     }
@@ -36,8 +32,8 @@ public class ContainerScoreBehaviourScript : MonoBehaviour
     
     private void OnCurrentLevelListChange(GameObject[] listOfStations, GameObject[] listOfContainer)
     {
-        listOfContainerObj = listOfStations;
-        listOfStationObj = listOfContainer;
+        listOfContainerObj = listOfContainer;
+        listOfStationObj = listOfStations;
         
         CleanStationPanels();
         CreateStationPanels();

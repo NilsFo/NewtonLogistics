@@ -1,7 +1,10 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class KompassBehaviourScript : MonoBehaviour
 {
+    [SerializeField] private Transform pointerContainer;
+    
     [SerializeField] private GameObject prefabStation;
     [SerializeField] private GameObject prefabContainer;
     
@@ -28,8 +31,8 @@ public class KompassBehaviourScript : MonoBehaviour
 
     private void UpdateList(GameObject[] listOfStations, GameObject[] listOfContainer)
     {
-        listOfContainerObj = listOfStations;
-        listOfStationObj = listOfContainer;
+        listOfContainerObj = listOfContainer;
+        listOfStationObj = listOfStations;
         
         CleanPointer();
         CreatePointer();
@@ -63,7 +66,7 @@ public class KompassBehaviourScript : MonoBehaviour
         for (int i = 0; i < listOfContainerObj.Length; i++)
         {
             DumpableBehaviourScript dumb = listOfContainerObj[i].GetComponent<DumpableBehaviourScript>();
-            listOfContainerPointer[i] = Instantiate(prefabContainer, transform);
+            listOfContainerPointer[i] = Instantiate(prefabContainer, pointerContainer);
             listOfContainerPointer[i].SetActive(true);
             
             if (dumb != null)
@@ -76,8 +79,8 @@ public class KompassBehaviourScript : MonoBehaviour
         listOfStationPointer = new GameObject[listOfStationObj.Length];
         for (int i = 0; i < listOfStationObj.Length; i++)
         {
-            DumpStationBehaviourScript dumb = listOfStationObj[i].GetComponent<DumpStationBehaviourScript>();
-            listOfStationPointer[i] = Instantiate(prefabStation, transform);
+            DumpStationBehaviourScript dumb = listOfStationObj[i].GetComponentInChildren<DumpStationBehaviourScript>();
+            listOfStationPointer[i] = Instantiate(prefabStation, pointerContainer);
             listOfStationPointer[i].SetActive(true);
             
             if (dumb != null)
@@ -102,7 +105,7 @@ public class KompassBehaviourScript : MonoBehaviour
 
         for (int i = 0; i < listOfStationObj.Length; i++)
         {
-            DumpStationBehaviourScript dumb = listOfStationObj[i].GetComponent<DumpStationBehaviourScript>();
+            DumpStationBehaviourScript dumb = listOfStationObj[i].GetComponentInChildren<DumpStationBehaviourScript>();
             if (dumb != null)
             {
                 Vector2 pos = circleCollider2D.ClosestPoint(dumb.transform.position);
@@ -115,6 +118,8 @@ public class KompassBehaviourScript : MonoBehaviour
     void Update()
     {
         UpdatePointer();
+        bool playerRequestsZoomOut = Keyboard.current.tabKey.isPressed;
+        pointerContainer.gameObject.SetActive(playerRequestsZoomOut);
     }
 }
  

@@ -24,12 +24,12 @@ public class StationPanelBehaviourScript : MonoBehaviour
     public void Init(GameObject station)
     {
         stationObj = station;
-        stationBehaviourScript = stationObj.GetComponent<DumpStationBehaviourScript>();
+        stationBehaviourScript = stationObj.GetComponentInChildren<DumpStationBehaviourScript>();
         if (stationBehaviourScript != null)
         {
             nameLable.text = stationBehaviourScript.GetStationName();
+            InitLabels();
         }
-        InitLabels();
     }
 
     private void Update()
@@ -39,6 +39,7 @@ public class StationPanelBehaviourScript : MonoBehaviour
 
     public void UpdateState()
     {
+        if(stationBehaviourScript == null) return;
         int currentState = stationBehaviourScript.GetContainerCount();
         if(0 > currentState || currentState >= stationBehaviourScript.MAXContainerCount) return;
         

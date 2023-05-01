@@ -18,6 +18,8 @@ public enum GameLevel
     Two,
     Three,
     Four,
+    Five,
+    Six,
     Done
 }
 
@@ -39,6 +41,12 @@ public class GameStateBehaviourScript : MonoBehaviour
     
     [SerializeField] private GameObject[] listContainerForLevelFour;
     [SerializeField] private GameObject[] listStationForLevelFour;
+    
+    [SerializeField] private GameObject[] listContainerForLevelFive;
+    [SerializeField] private GameObject[] listStationForLevelFive;
+    
+    [SerializeField] private GameObject[] listContainerForLevelSix;
+    [SerializeField] private GameObject[] listStationForLevelSix;
     
     //Stats
     [Header("Stats")]
@@ -161,6 +169,16 @@ public class GameStateBehaviourScript : MonoBehaviour
         
         if (gameLevel == GameLevel.Four)
         {
+            return GameLevel.Five;
+        }
+        
+        if (gameLevel == GameLevel.Five)
+        {
+            return GameLevel.Six;
+        }
+        
+        if (gameLevel == GameLevel.Six)
+        {
             return GameLevel.Done;
         }
 
@@ -179,16 +197,12 @@ public class GameStateBehaviourScript : MonoBehaviour
 
     public void ChangeGameLevelAndGameState(GameLevel level, GameState state)
     {
-        if (state == GameState.Init)
-        {
-            EnableLevel(level);
-        }
-
-        if (state == GameState.Finish)
+        if (level != gameLevel)
         {
             DisableCurrentLevel();
+            EnableLevel(level);
         }
-
+        
         gameLevel = level;
         gameState = state;
         //Fire Event 
@@ -223,7 +237,16 @@ public class GameStateBehaviourScript : MonoBehaviour
             listStation = listStationForLevelFour;
             listContainer = listContainerForLevelFour;
         }
-        
+        else if (level == GameLevel.Five)
+        {
+            listStation = listStationForLevelFive;
+            listContainer = listContainerForLevelFive;
+        }
+        else if (level == GameLevel.Six)
+        {
+            listStation = listStationForLevelSix;
+            listContainer = listContainerForLevelSix;
+        }
         currentLevelListOfContainer = listContainer;
         for (int i = 0; i < listContainer.Length; i++)
         {
@@ -236,13 +259,13 @@ public class GameStateBehaviourScript : MonoBehaviour
             }
             objToEnable.SetActive(true);
         }
-        
+
         //Set Max Count
         currentLevelListOfStations = listStation;
         for (int i = 0; i < listStation.Length; i++)
         {
             GameObject objToEnable = listStation[i];
-            DumpStationBehaviourScript station = objToEnable.GetComponent<DumpStationBehaviourScript>();
+            DumpStationBehaviourScript station = objToEnable.GetComponentInChildren<DumpStationBehaviourScript>();
             if (station != null)
             {
                 if (counter.ContainsKey(station.StationIndex))
@@ -298,5 +321,15 @@ public class GameStateBehaviourScript : MonoBehaviour
         ChangeGameLevelAndGameState(GameLevel.Four, GameState.Init);
     }
     
-    #endregion 
+    #endregion
+
+    public void ChangeToLevelFour()
+    {
+        ChangeGameLevelAndGameState(GameLevel.Five, GameState.Init);
+    }
+
+    public void ChangeToLevelSix()
+    {
+        ChangeGameLevelAndGameState(GameLevel.Six, GameState.Init);
+    }
 }
