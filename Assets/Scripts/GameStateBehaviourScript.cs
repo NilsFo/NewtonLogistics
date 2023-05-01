@@ -84,39 +84,54 @@ public class GameStateBehaviourScript : MonoBehaviour
 
     void Start()
     {
+        Debug.Log(LoadLevel);
         musicManager.PlaySongLoop();
         GameLevel levelToLoad = gameLevel;
-        if (LoadLevel >= 0)
+        GameState stateToLoad = gameState;
+       
+        if (LoadLevel == 0)
         {
-            switch (LoadLevel)
-            {
-                case 0:
-                    levelToLoad = GameLevel.None;
-                    break;
-                case 1:
-                    levelToLoad = GameLevel.One;
-                    break;
-                case 2:
-                    levelToLoad = GameLevel.Two;
-                    break;
-                case 3:
-                    levelToLoad = GameLevel.Three;
-                    break;
-                case 4:
-                    levelToLoad = GameLevel.Four;
-                    break;
-                case 5:
-                    levelToLoad = GameLevel.Five;
-                    break;
-                case 6:
-                    levelToLoad = GameLevel.Six;
-                    break;
-                default:
-                    levelToLoad = GameLevel.Done;
-                    break;
-            }
+            levelToLoad = GameLevel.None;
+            stateToLoad = GameState.Init;
         }
-        ChangeGameLevelAndGameState(levelToLoad, gameState);
+        else if (LoadLevel == 1)
+        {
+            levelToLoad = GameLevel.One;
+            stateToLoad = GameState.Init;
+        }
+        else if (LoadLevel == 2)
+        {
+            levelToLoad = GameLevel.Two;
+            stateToLoad = GameState.Init;
+        }
+        else if (LoadLevel == 3)
+        {
+            levelToLoad = GameLevel.Three;
+            stateToLoad = GameState.Init;
+        }
+        else if (LoadLevel == 4)
+        {
+            levelToLoad = GameLevel.Four;
+            stateToLoad = GameState.Init;
+        }
+        else if (LoadLevel == 5)
+        {
+            levelToLoad = GameLevel.Five;
+            stateToLoad = GameState.Init;
+        }
+        else if (LoadLevel == 6)
+        {
+            levelToLoad = GameLevel.Six;
+            stateToLoad = GameState.Init;
+        }
+        else if (LoadLevel == 7)
+        {
+            levelToLoad = GameLevel.Done;
+            stateToLoad = GameState.Init;
+        }
+        
+        ChangeGameLevelAndGameState(levelToLoad, stateToLoad);
+        LoadLevel = -1;
     }
 
     private void Update()
@@ -142,7 +157,7 @@ public class GameStateBehaviourScript : MonoBehaviour
         for (int i = 0; i < currentLevelListOfStations.Length; i++)
         {
             GameObject obj = currentLevelListOfStations[i];
-            DumpStationBehaviourScript station = obj.GetComponent<DumpStationBehaviourScript>();
+            DumpStationBehaviourScript station = obj.GetComponentInChildren<DumpStationBehaviourScript>();
             if (station != null)
             {
                 points.Add(station.GetStationName(), station.GetContainerCount());
@@ -230,6 +245,8 @@ public class GameStateBehaviourScript : MonoBehaviour
 
     public void ChangeGameLevelAndGameState(GameLevel level, GameState state)
     {
+        Debug.Log("GL:" + gameLevel + "L:" + level + " S:" + state);
+        
         if (level != gameLevel)
         {
             DisableCurrentLevel();

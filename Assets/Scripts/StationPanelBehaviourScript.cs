@@ -41,7 +41,7 @@ public class StationPanelBehaviourScript : MonoBehaviour
     {
         if(stationBehaviourScript == null) return;
         int currentState = stationBehaviourScript.GetContainerCount();
-        if(0 > currentState || currentState >= stationBehaviourScript.MAXContainerCount) return;
+        if(0 > currentState || currentState > stationBehaviourScript.MAXContainerCount) return;
         
         for (int i = 0; i < stationBehaviourScript.MAXContainerCount; i++)
         {
