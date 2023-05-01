@@ -160,4 +160,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   torqueEnabled: 1
   myRB: {fileID: 6183422454222902820}
-  magnitude: 25
+  magnitude: 55
