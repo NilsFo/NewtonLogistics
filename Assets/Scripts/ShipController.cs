@@ -128,7 +128,7 @@ public class ShipController : MonoBehaviour {
             StartEmission(thrusterParticlesRB);
             StartEmission(thrusterParticlesLF);
         }
-        if (kb.fKey.isPressed || kb.spaceKey.isPressed) {
+        if (kb.fKey.isPressed) {
             _magnetOn = true;
         }
         if (kb.digit1Key.wasPressedThisFrame || kb.rKey.wasPressedThisFrame) {
@@ -160,6 +160,10 @@ public class ShipController : MonoBehaviour {
         }
         if (kb.digit0Key.wasPressedThisFrame) {
             Disconnect(9, kb.shiftKey.isPressed);
+        }
+        
+        if (kb.spaceKey.wasPressedThisFrame) {
+            Disconnect(0, true);
         }
     }
 
