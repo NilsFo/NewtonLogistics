@@ -9,12 +9,14 @@ public class SignHover : MonoBehaviour
     private float dt;
     private float x, y, z;
 
+    public bool keepXPos = true;
+
     // Start is called before the first frame update
     void Start()
     {
         //Random jitter
         dt = Random.Range(0.0f, 200.0f);
-        
+
         x = transform.position.x;
         y = transform.position.y;
         z = transform.position.z;
@@ -24,6 +26,12 @@ public class SignHover : MonoBehaviour
     void Update()
     {
         dt += Time.deltaTime * speed;
+
+        if (!keepXPos)
+        {
+            x = transform.position.x;
+        }
+
         Vector3 pos = new Vector3(x, y + MathF.Sin(dt) * magnitude, z);
         transform.position = pos;
     }
