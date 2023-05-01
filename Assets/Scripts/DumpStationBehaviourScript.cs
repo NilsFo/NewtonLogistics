@@ -8,18 +8,21 @@ public class DumpStationBehaviourScript : MonoBehaviour
     [SerializeField] private Collider2D myCollider2D;
     [SerializeField] private TextMeshProUGUI textLabel;
     [SerializeField] private Transform generalAttractorPoint = null;
-    [SerializeField] private Transform[] specificAttractorPoint = new Transform[0];
-        
+    [SerializeField] private Transform generalPushPoint = null;
+
     [Header("Config")]
     [SerializeField] private int stationIndex;
     [SerializeField] private string stationName;
     [SerializeField] private float pushPower = 5f;
+    [SerializeField] private float suckPower = 5f;
     [SerializeField] private int maxContainerCount = 0;
+    [SerializeField] private int currentLevelSuck = 0;
     
     [Header("Debug")]
     [SerializeField] private List<DumpableBehaviourScript> listOfInTrigger;
     [SerializeField] private List<DumpableBehaviourScript> listOfInTriggerWrongDump;
     [SerializeField] private List<DumpableBehaviourScript> listOfOverlapCenterMass;
+    [SerializeField] private List<DumpableBehaviourScript> listOfSuck;
 
     // Start is called before the first frame update
     void Awake()
@@ -35,6 +38,10 @@ public class DumpStationBehaviourScript : MonoBehaviour
         if (listOfInTriggerWrongDump == null)
         {
             listOfInTriggerWrongDump = new List<DumpableBehaviourScript>();
+        }
+        if (listOfSuck == null)
+        {
+            listOfSuck = new List<DumpableBehaviourScript>();
         }
     }
 
@@ -52,7 +59,9 @@ public class DumpStationBehaviourScript : MonoBehaviour
             for (int i = 0; i < listOfInTrigger.Count; i++)
             {
                 DumpableBehaviourScript dump = listOfInTrigger[i];
-                if (myCollider2D.OverlapPoint(dump.GetPointOfIntrest()) && dump.DumpStationIndex == stationIndex)
+                if (myCollider2D.OverlapPoint(dump.GetPointOfIntrest()) 
+                    && dump.DumpStationIndex == stationIndex 
+                    && dump.Cargo.cargoState == Cargo.CargoState.Free)
                 {
                     listOfOverlapCenterMass.Add(dump);
                 }
@@ -64,49 +73,45 @@ public class DumpStationBehaviourScript : MonoBehaviour
             for (int i = 0; i < listOfInTriggerWrongDump.Count; i++)
             {
                 DumpableBehaviourScript dumpForPush = listOfInTriggerWrongDump[i];
-                Rigidbody2D rigidbody2D = dumpForPush.Rigidbody2D;
-                
-                Vector2 direction = rigidbody2D.position - (Vector2) myCollider2D.bounds.center;
-                rigidbody2D.AddForce(direction.normalized * (pushPower * Time.deltaTime), ForceMode2D.Impulse);
-            }
-        }
-
-        if (listOfOverlapCenterMass.Count > 0)
-        {
-            if (generalAttractorPoint != null)
-            {
-                 for (int i = 0; i < listOfOverlapCenterMass.Count; i++)
-                 {
-                     DumpableBehaviourScript dump = listOfOverlapCenterMass[i];
-                     if (dump.Cargo.cargoState == Cargo.CargoState.Free)
-                     {
-                         Vector2 direction = dump.Rigidbody2D.position - (Vector2) generalAttractorPoint.position;
-                         if (direction.magnitude < 0.2f)
-                         { 
-                             dump.Rigidbody2D.AddForce(direction.normalized * (pushPower * Time.deltaTime), ForceMode2D.Impulse);  
-                         }
-                     }
-                 }   
-            }
-            else if (specificAttractorPoint.Length > 0)
-            {
-                for (int i = 0; i < listOfOverlapCenterMass.Count; i++)
+                if (dumpForPush.Cargo.cargoState == Cargo.CargoState.Free)
                 {
-                    if (i < specificAttractorPoint.Length)
-                    {
-                        DumpableBehaviourScript dump = listOfOverlapCenterMass[i];
-                        if (dump.Cargo.cargoState == Cargo.CargoState.Free)
-                        {
-                            Vector2 direction = dump.Rigidbody2D.position - (Vector2) specificAttractorPoint[i].position;
-                            if (direction.magnitude < 0.2f)
-                            { 
-                                dump.Rigidbody2D.AddForce(direction.normalized * (pushPower * Time.deltaTime), ForceMode2D.Impulse);  
-                            }
-                        }
-                    }
-                } 
+                    Transform transformDump = dumpForPush.transform;
+                    dumpForPush.Rigidbody2D.velocity = Vector2.zero;
+                    transformDump.position = Vector3.MoveTowards(transformDump.position, generalPushPoint.position,
+                        (pushPower * Time.deltaTime));
+                }
             }
         }
+        
+        for (int i = 0; i < listOfOverlapCenterMass.Count; i++)
+        {
+             DumpableBehaviourScript dump = listOfOverlapCenterMass[i];
+             if (dump.Cargo.cargoState == Cargo.CargoState.Free)
+             {
+                 listOfSuck.Add(dump);
+             }
+        }
+        
+        //SuckList
+        for (int i = listOfSuck.Count-1; i > -1; i--)
+        {
+            DumpableBehaviourScript dump = listOfSuck[i];
+            
+            dump.Rigidbody2D.simulated = false;
+            //TODO CargoScript NONO
+             
+            Transform transformDump = dump.transform;
+            transformDump.position = Vector3.MoveTowards(transformDump.position, generalAttractorPoint.position,
+                (suckPower * Time.deltaTime));
+            
+            //Its gone
+            if (Vector3.Distance(transformDump.position, generalAttractorPoint.position) < 0.2f)
+            {
+                currentLevelSuck++;
+                listOfSuck.RemoveAt(i);
+            }
+        }
+        
     }
     
     void OnTriggerEnter2D(Collider2D col)
@@ -143,7 +148,7 @@ public class DumpStationBehaviourScript : MonoBehaviour
 
     public int GetContainerCount()
     {
-        return listOfOverlapCenterMass.Count;
+        return currentLevelSuck;
     }
 
     public string GetStationName()
@@ -154,6 +159,7 @@ public class DumpStationBehaviourScript : MonoBehaviour
     public void SetMaxCountContainer(int i)
     {
         maxContainerCount = i;
+        currentLevelSuck = 0; //Reset Suck
     }
 
     public int MAXContainerCount => maxContainerCount;
