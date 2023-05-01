@@ -29,12 +29,17 @@ public class ShipController : MonoBehaviour {
     private GameStateBehaviourScript gameState;
 
     public AudioSource thrusterSound, clickSound, releaseSound;
+    private float thrusterSoundDesired = 0;
+    public float thrusterSoundChangeSpeed = 1.337f;
+    public float thrusterSoundVolume = 1.0f;
+    private MusicManager musicManager;
     
     // Start is called before the first frame update
     void Start() {
         gameState = FindObjectOfType<GameStateBehaviourScript>();
         InvokeRepeating(nameof(UpdateNearbyConnectors), 0.1f, 0.1f);
         StopAllEmissions();
+        musicManager = FindObjectOfType<MusicManager>();
     }
 
     // Update is called once per frame
@@ -42,6 +47,21 @@ public class ShipController : MonoBehaviour {
     {
         HandleInput();
         UpdateViz();
+        
+        if (_bThrustOn || _fThrustOn || _lbThrustOn || _lfThrustOn || _rbThrustOn || _rfThrustOn) {
+            thrusterSoundDesired = thrusterSoundVolume;
+            thrusterSound.volume = thrusterSoundVolume;
+        } else {
+            thrusterSoundDesired = 0;
+        }
+
+        thrusterSound.volume = Mathf.Lerp(thrusterSound.volume, thrusterSoundDesired,
+            Time.deltaTime * thrusterSoundChangeSpeed);
+        print(thrusterSound.volume);
+        
+        thrusterSound.volume=thrusterSound.volume*musicManager.GetVolumeSound();
+         clickSound.volume=clickSound.volume*musicManager.GetVolumeSound();
+         releaseSound.volume=releaseSound.volume*musicManager.GetVolumeSound(); 
     }
 
     private void FixedUpdate() {
@@ -86,9 +106,10 @@ public class ShipController : MonoBehaviour {
             PullConnectors();
         }
         if (_bThrustOn || _fThrustOn || _lbThrustOn || _lfThrustOn || _rbThrustOn || _rfThrustOn) {
-            thrusterSound.volume = 0.5f;
+            thrusterSoundDesired = thrusterSoundVolume;
+            thrusterSound.volume = thrusterSoundVolume;
         } else {
-            thrusterSound.volume = 0;
+            thrusterSoundDesired = 0;
         }
     }
 

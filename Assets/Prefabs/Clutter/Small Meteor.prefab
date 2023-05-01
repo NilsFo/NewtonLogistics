@@ -143,7 +143,7 @@ MonoBehaviour:
   respectBinning: 1
   showParticles: 1
   particleColor: {r: 0.76470596, g: 0.72156864, b: 0.69411767, a: 1}
-  impactParticlePrefab: {fileID: 308562791995608323, guid: c22e1bd3a3f467b4683942c729709f6a, type: 3}
+  impactParticlePrefab: {fileID: 473678605313508382, guid: 3128d208d5a807244ab69d5ad208cb78, type: 3}
   particleScale: 1
   shakeEnabled: 0
 --- !u!114 &-581319318348959385
