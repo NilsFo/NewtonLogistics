@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public enum GameState
 {
@@ -68,6 +70,9 @@ public class GameStateBehaviourScript : MonoBehaviour
     [SerializeField] private GameObject[] currentLevelListOfStations;
     [SerializeField] private Dictionary<string, int> points;
 
+    private int playerRequestsQuitCounter = 0;
+    private bool playerRequestsQuitWasReleased = true;
+    
     private void Awake()
     {
         player = FindObjectOfType<ShipController>();
@@ -84,11 +89,16 @@ public class GameStateBehaviourScript : MonoBehaviour
 
     void Start()
     {
-        Debug.Log(LoadLevel);
         musicManager.PlaySongLoop();
         GameLevel levelToLoad = gameLevel;
         GameState stateToLoad = gameState;
-       
+
+        if (LoadLevel != -1)
+        {
+            gameLevel = GameLevel.None;
+            gameState = GameState.Init;
+        }
+        
         if (LoadLevel == 0)
         {
             levelToLoad = GameLevel.None;
@@ -147,6 +157,45 @@ public class GameStateBehaviourScript : MonoBehaviour
         else if (gameState == GameState.Start)
         {
             CheckPointCompleteness();
+        }
+        
+        bool playerRequestsQuit = Keyboard.current.escapeKey.isPressed;
+        if (playerRequestsQuit && playerRequestsQuitWasReleased) 
+        {
+            playerRequestsQuitCounter++;
+            playerRequestsQuitWasReleased = false;
+            
+            if (playerRequestsQuitCounter > 1)
+            {
+                //Second Press
+                LoadLevel = -1;
+                SceneManager.LoadScene("MainMenuScene");
+            }
+        }
+        else
+        {
+            playerRequestsQuitWasReleased = true;
+        }
+
+
+        if (playerRequestsQuit)
+        {
+            LoadLevel = -1;
+            SceneManager.LoadScene("MainMenuScene");
+        }
+
+        bool playerRequestsReset = Keyboard.current.backspaceKey.isPressed;
+        if (playerRequestsReset)
+        {
+            LoadLevel = -1;
+            if(gameLevel == GameLevel.One) LoadLevel = 1;
+            if(gameLevel == GameLevel.Two) LoadLevel = 2;
+            if(gameLevel == GameLevel.Three) LoadLevel = 3;
+            if(gameLevel == GameLevel.Four) LoadLevel = 4;
+            if(gameLevel == GameLevel.Five) LoadLevel = 5;
+            if(gameLevel == GameLevel.Six) LoadLevel = 6;
+            if(gameLevel == GameLevel.Done) LoadLevel = 7;
+            SceneManager.LoadScene("KairosStation");
         }
     }
 
@@ -245,8 +294,6 @@ public class GameStateBehaviourScript : MonoBehaviour
 
     public void ChangeGameLevelAndGameState(GameLevel level, GameState state)
     {
-        Debug.Log("GL:" + gameLevel + "L:" + level + " S:" + state);
-        
         if (level != gameLevel)
         {
             DisableCurrentLevel();
