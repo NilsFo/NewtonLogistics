@@ -25,6 +25,8 @@ public enum GameLevel
 
 public class GameStateBehaviourScript : MonoBehaviour
 {
+    public static int LoadLevel = -1;
+    
     //UnityEvents
     public UnityEvent<GameLevel,GameState> onGameStateChange;
     public UnityEvent<GameObject[],GameObject[]> onCurrentLevelListChange;
@@ -83,7 +85,38 @@ public class GameStateBehaviourScript : MonoBehaviour
     void Start()
     {
         musicManager.PlaySongLoop();
-        ChangeGameLevelAndGameState(gameLevel, gameState);
+        GameLevel levelToLoad = gameLevel;
+        if (LoadLevel >= 0)
+        {
+            switch (LoadLevel)
+            {
+                case 0:
+                    levelToLoad = GameLevel.None;
+                    break;
+                case 1:
+                    levelToLoad = GameLevel.One;
+                    break;
+                case 2:
+                    levelToLoad = GameLevel.Two;
+                    break;
+                case 3:
+                    levelToLoad = GameLevel.Three;
+                    break;
+                case 4:
+                    levelToLoad = GameLevel.Four;
+                    break;
+                case 5:
+                    levelToLoad = GameLevel.Five;
+                    break;
+                case 6:
+                    levelToLoad = GameLevel.Six;
+                    break;
+                default:
+                    levelToLoad = GameLevel.Done;
+                    break;
+            }
+        }
+        ChangeGameLevelAndGameState(levelToLoad, gameState);
     }
 
     private void Update()
