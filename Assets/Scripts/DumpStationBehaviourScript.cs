@@ -88,7 +88,7 @@ public class DumpStationBehaviourScript : MonoBehaviour
              DumpableBehaviourScript dump = listOfOverlapCenterMass[i];
              if (dump.Cargo.cargoState == Cargo.CargoState.Free)
              {
-                 listOfSuck.Add(dump);
+                 if(!listOfSuck.Contains(dump)) listOfSuck.Add(dump);
              }
         }
         

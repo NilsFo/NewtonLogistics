@@ -201,7 +201,7 @@ public class GameStateBehaviourScript : MonoBehaviour
 
     private void CheckPointCompleteness()
     {
-        int sumOfContainerInStation = 0;
+        bool isComplet = true;
         points = new Dictionary<string, int>();
         for (int i = 0; i < currentLevelListOfStations.Length; i++)
         {
@@ -210,12 +210,10 @@ public class GameStateBehaviourScript : MonoBehaviour
             if (station != null)
             {
                 points.Add(station.GetStationName(), station.GetContainerCount());
-                sumOfContainerInStation += station.GetContainerCount();
-
+                if(station.GetContainerCount() < station.MAXContainerCount) isComplet = false;
             }
         }
-            
-        bool isComplet = (sumOfContainerInStation == currentLevelListOfContainer.Length);
+        
         if (isComplet && gameState == GameState.Start)
         {
             ChangeGameState(GameState.Finish);
