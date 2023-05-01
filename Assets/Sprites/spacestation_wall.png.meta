@@ -981,7 +981,7 @@ TextureImporter:
       name: spacestation_wall_41
       rect:
         serializedVersion: 2
-        x: 48
+        x: 0
         y: 0
         width: 16
         height: 16
@@ -994,6 +994,69 @@ TextureImporter:
       bones: []
       spriteID: 70265ef3c6cf3654a992494fc463d627
       internalID: -2086176303
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spacestation_wall_42
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 0
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0e05533e6f6d82d46aea8d17ead59511
+      internalID: 923985014
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spacestation_wall_43
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 0
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 47ed4c853c869b24bbb5fb70cdbdc351
+      internalID: -1337173988
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spacestation_wall_44
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 0
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2e18795f8e2b2ac4899bb014cd446c8e
+      internalID: -949225066
       vertices: []
       indices: 
       edges: []
@@ -1046,6 +1109,9 @@ TextureImporter:
       spacestation_wall_4: -2045764881
       spacestation_wall_40: -1499752721
       spacestation_wall_41: -2086176303
+      spacestation_wall_42: 923985014
+      spacestation_wall_43: -1337173988
+      spacestation_wall_44: -949225066
       spacestation_wall_5: 2048760297
       spacestation_wall_6: 1128881524
       spacestation_wall_7: 1707583777
