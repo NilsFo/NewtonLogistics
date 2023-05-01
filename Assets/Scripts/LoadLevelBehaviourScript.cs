@@ -6,9 +6,11 @@ using UnityEngine.SceneManagement;
 public class LoadLevelBehaviourScript : MonoBehaviour
 {
     public string levelName;
+    public int levelId;
     
     public void LoadLevel()
     {
+        GameStateBehaviourScript.LoadLevel = levelId;
         SceneManager.LoadScene(levelName);
     }
 }

@@ -117,6 +117,7 @@ public class GameStateBehaviourScript : MonoBehaviour
             }
         }
         ChangeGameLevelAndGameState(levelToLoad, gameState);
+        LoadLevel = -1;
     }
 
     private void Update()
