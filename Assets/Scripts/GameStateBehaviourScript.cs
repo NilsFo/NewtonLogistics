@@ -84,7 +84,7 @@ public class GameStateBehaviourScript : MonoBehaviour
         {
             ChangeGameState(GameState.Intro);
         }
-        else if (gameState == GameState.Finish)
+        else if (gameState == GameState.Finish && gameLevel != GameLevel.Done)
         {
             ChangeGameLevelAndGameState(NextLevel(),GameState.Init);
         }

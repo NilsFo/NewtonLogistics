@@ -121,7 +121,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8629260295490334386, guid: 813b2fecf013bb44ca31747fabfe1999, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8629260295490334386, guid: 813b2fecf013bb44ca31747fabfe1999, type: 3}
       propertyPath: m_EdgeRadius
