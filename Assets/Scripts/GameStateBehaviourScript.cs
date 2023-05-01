@@ -142,7 +142,7 @@ public class GameStateBehaviourScript : MonoBehaviour
         for (int i = 0; i < currentLevelListOfStations.Length; i++)
         {
             GameObject obj = currentLevelListOfStations[i];
-            DumpStationBehaviourScript station = obj.GetComponent<DumpStationBehaviourScript>();
+            DumpStationBehaviourScript station = obj.GetComponentInChildren<DumpStationBehaviourScript>();
             if (station != null)
             {
                 points.Add(station.GetStationName(), station.GetContainerCount());
