@@ -27,6 +27,8 @@ public class ShipController : MonoBehaviour {
     public List<Cargo> connectedCargo = new List<Cargo>();
 
     private GameStateBehaviourScript gameState;
+
+    public AudioSource thrusterSound, clickSound, releaseSound;
     
     // Start is called before the first frame update
     void Start() {
@@ -82,6 +84,11 @@ public class ShipController : MonoBehaviour {
         }
         if (_magnetOn) {
             PullConnectors();
+        }
+        if (_bThrustOn || _fThrustOn || _lbThrustOn || _lfThrustOn || _rbThrustOn || _rfThrustOn) {
+            thrusterSound.volume = 0.5f;
+        } else {
+            thrusterSound.volume = 0;
         }
     }
 
@@ -297,6 +304,8 @@ public class ShipController : MonoBehaviour {
         
         connectedCargo.Add(cargo);
         gameState.cameraController.AddFollowTarget(cargo.gameObject);
+        
+        clickSound.Play();
     }
 
     public void Disconnect(int index, bool strongPush = false) {
@@ -335,6 +344,10 @@ public class ShipController : MonoBehaviour {
 
         connectedCargo.Remove(cargo);
         gameState.cameraController.RemoveFollowTarget(cargo.gameObject);
+
+        if (!releaseSound.isPlaying) {
+            releaseSound.Play();
+        }
     }
 
     public void StopAllEmissions()

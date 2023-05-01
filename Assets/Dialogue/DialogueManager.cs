@@ -16,7 +16,7 @@ namespace Dialogue {
             textBubbleManager = GetComponent<TextBubbleManager>();
             gameState = FindObjectOfType<GameStateBehaviourScript>();
             
-            RequestRadioMessage("Hallo Welt", 5f);
+            //RequestRadioMessage("Hey new guy, welcome to Newton Logistics. We have a space station to build, so don't wait around.", 10f);
         }
 
         public void RadioMessage(string message, float duration) {

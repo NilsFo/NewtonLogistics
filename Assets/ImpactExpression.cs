@@ -47,28 +47,27 @@ public class ImpactExpression : MonoBehaviour
         contactPosition.y = contact.y;
         contactPosition.z = contactPosition.z - 1f;
 
-        if (playSound)
-        {
-            _gameStateBehaviourScript.musicManager.CreateAudioClip(impactSound, contactPosition, volumeMult,
-                respectBinning);
-        }
+        if (other.GetContact(0).normalImpulse > 10f) {
+            if (playSound) {
+                _gameStateBehaviourScript.musicManager.CreateAudioClip(impactSound, contactPosition, volumeMult,
+                    respectBinning);
+            }
 
-        if (showParticles && particleCooldown < 0)
-        {
-            var particles = Instantiate(impactParticlePrefab);
-            particles.transform.position = contactPosition;
-            ParticleSystem system = particles.GetComponent<ParticleSystem>();
-            var main = system.main;
-            main.startColor = particleColor;
+            if (showParticles && particleCooldown < 0) {
+                var particles = Instantiate(impactParticlePrefab);
+                particles.transform.position = contactPosition;
+                ParticleSystem system = particles.GetComponent<ParticleSystem>();
+                var main = system.main;
+                main.startColor = particleColor;
 
-            particles.transform.localScale = new Vector3(1, 1, particleScale);
+                particles.transform.localScale = new Vector3(1, 1, particleScale);
 
-            particleCooldown = Time.fixedDeltaTime;
-        }
+                particleCooldown = Time.fixedDeltaTime;
+            }
 
-        if (shakeEnabled)
-        {
-            _gameStateBehaviourScript.cameraController.ShakeCamera(8,4,0.69f);
+            if (shakeEnabled) {
+                _gameStateBehaviourScript.cameraController.ShakeCamera(8, 4, 0.69f);
+            }
         }
     }
 }
