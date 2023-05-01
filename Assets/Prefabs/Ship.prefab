@@ -93,11 +93,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 601de8475a0801246b07793c2da77815, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  forwardThrust: 100
-  sideThrust: 30
-  backwardThrust: 100
+  forwardThrust: 150
+  sideThrust: 50
+  backwardThrust: 150
   pullForce: 3000
-  pullDistance: 2.5
+  pullDistance: 3
   disconnectPushForce: 5
   disconnectPushForceStrong: 50
   rb: {fileID: 1832836480714434160}
@@ -957,7 +957,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 0ee95809c53550b4e84fa38f5e07060b, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 5e970c27547500e44918fe6b3d6f6f67, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 0
   m_Pitch: 1
@@ -1346,7 +1346,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 87201349497291794, guid: 106e5383a3fadd142b08cf17e246fef7, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -8
       objectReference: {fileID: 0}
     - target: {fileID: 87201349497291794, guid: 106e5383a3fadd142b08cf17e246fef7, type: 3}
       propertyPath: m_LocalRotation.w

@@ -98,8 +98,10 @@ public class KompassBehaviourScript : MonoBehaviour
             DumpableBehaviourScript dumb = listOfContainerObj[i].GetComponent<DumpableBehaviourScript>();
             if (dumb != null)
             {
-                Vector2 pos = circleCollider2D.ClosestPoint(dumb.Rigidbody2D.worldCenterOfMass);
+                Vector3 pos = circleCollider2D.ClosestPoint(dumb.Rigidbody2D.worldCenterOfMass);
+                pos.z = -8;
                 listOfContainerPointer[i].transform.position = pos;
+                listOfContainerPointer [i].transform.rotation = Quaternion.LookRotation(Vector3.forward, (Vector2)(dumb.transform.position - pos));
             }
         }
 
@@ -108,8 +110,10 @@ public class KompassBehaviourScript : MonoBehaviour
             DumpStationBehaviourScript dumb = listOfStationObj[i].GetComponentInChildren<DumpStationBehaviourScript>();
             if (dumb != null)
             {
-                Vector2 pos = circleCollider2D.ClosestPoint(dumb.transform.position);
+                Vector3 pos = circleCollider2D.ClosestPoint(dumb.transform.position);
+                pos.z = -8;
                 listOfStationPointer[i].transform.position = pos;
+                listOfStationPointer [i].transform.rotation = Quaternion.LookRotation(Vector3.forward, (Vector2)(dumb.transform.position - pos));
             }
         }
     }

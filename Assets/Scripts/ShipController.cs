@@ -86,7 +86,7 @@ public class ShipController : MonoBehaviour {
             PullConnectors();
         }
         if (_bThrustOn || _fThrustOn || _lbThrustOn || _lfThrustOn || _rbThrustOn || _rfThrustOn) {
-            thrusterSound.volume = 0.5f;
+            thrusterSound.volume = 0.2f;
         } else {
             thrusterSound.volume = 0;
         }
@@ -138,7 +138,10 @@ public class ShipController : MonoBehaviour {
         if (kb.fKey.isPressed) {
             _magnetOn = true;
         }
-        if (kb.digit1Key.wasPressedThisFrame || kb.rKey.wasPressedThisFrame) {
+        if (kb.rKey.wasPressedThisFrame) {
+            DisconnectLast(kb.shiftKey.isPressed);
+        }
+        if (kb.digit1Key.wasPressedThisFrame) {
             Disconnect(0, kb.shiftKey.isPressed);
         }
         if (kb.digit2Key.wasPressedThisFrame) {
@@ -203,7 +206,7 @@ public class ShipController : MonoBehaviour {
         List<Cargo> cargoOccupied = new List<Cargo>();
         List<(Connector, Connector)> tempConnectors = new List<(Connector, Connector)>();
         foreach (var (outsideCon, cargoCon) in _nearbyConnectors) {
-            var cargo = cargoCon.GetComponentInParent<Cargo>();
+            var cargo = cargoCon.cargo;
             if (connectorsOccupied.Contains(outsideCon) || cargoOccupied.Contains(cargo)) {
                 continue;
             }
@@ -308,6 +311,16 @@ public class ShipController : MonoBehaviour {
         clickSound.Play();
     }
 
+    public void DisconnectLast(bool strongPush = false) {
+        for (var index = _insideConnectors.Length - 1; index >= 0; index--) {
+            var (c1, c2) = _insideConnectors [index];
+            if (c1 != null) {
+                Disconnect(index, strongPush);
+                return;
+            }
+        }
+    }
+
     public void Disconnect(int index, bool strongPush = false) {
         // Find other links connected to this one
         var (stayConnector, leaveConnector) = _insideConnectors [index];
@@ -316,6 +329,10 @@ public class ShipController : MonoBehaviour {
             return;
         }
         var cargo = leaveConnector.GetComponentInParent<Cargo>();
+        if (cargo == null) {
+            Debug.LogWarning("Cargo is null while disconnecting. What happened here?");
+            return;
+        }
         foreach (var cargoConnector in cargo.connectors) {
             if (cargoConnector.connectorState == Connector.ConnectorState.AttachedInside && cargoConnector != leaveConnector) {
                 for (int i = 0; i < MAX_CONNECTORS; i++) {
