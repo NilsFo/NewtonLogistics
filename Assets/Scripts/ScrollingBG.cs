@@ -7,6 +7,7 @@ public class ScrollingBG : MonoBehaviour
     public float speed = 0.69f;
     private float dt;
     private float x, y, z;
+    public bool resetable = true;
 
     public float resetDist = 5;
 
@@ -22,12 +23,13 @@ public class ScrollingBG : MonoBehaviour
     void Update()
     {
         dt += Time.deltaTime * speed;
-        if (transform.position.x > resetDist)
+        if (transform.position.x > resetDist && resetable)
         {
             dt = 0;
         }
-        
-        Vector3 pos = new Vector3(x + dt * speed, y, z);
+        y = transform.position.y;
+
+        Vector3 pos = new Vector3(x + dt, y, z);
         transform.position = pos;
     }
 }

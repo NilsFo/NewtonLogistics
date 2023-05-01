@@ -120,6 +120,8 @@ MonoBehaviour:
   thrusterSound: {fileID: 4382781723140761545}
   clickSound: {fileID: 4104271553777813341}
   releaseSound: {fileID: 3199651150615231474}
+  thrusterSoundChangeSpeed: 0.25
+  thrusterSoundVolume: 0.9
 --- !u!50 &1832836480714434160
 Rigidbody2D:
   serializedVersion: 4
