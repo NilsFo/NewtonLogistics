@@ -197,7 +197,6 @@ public class MissionIntroBehaviourScript : MonoBehaviour
     }
     void IntroLevelOnePhaseFour()
     {
-        dialogueManager.RequestRadioMessage("Great. Now grab these containers with your magnet. Hold F to pull them all the way in and release them with R.", msgTimer*5);
     }
 
     #endregion
@@ -218,7 +217,6 @@ public class MissionIntroBehaviourScript : MonoBehaviour
     }
     void IntroLevelTwoPhaseFour()
     {
-        dialogueManager.RequestRadioMessage("If you haven't already figured it out, you can connect cargo together. Keep holding F until they are connected.", msgTimer);
     }
 
     #endregion
@@ -241,7 +239,6 @@ public class MissionIntroBehaviourScript : MonoBehaviour
     }
     void IntroLevelFourPhaseTwo()
     {
-        dialogueManager.RequestRadioMessage("Remember that heavy cargo displaces your center of mass. Use Q and E for better control.", msgTimer);
     }
 
     #endregion
