@@ -373,6 +373,7 @@ public class GameStateBehaviourScript : MonoBehaviour
     
     public void DisableCurrentLevel()
     {
+        if(gameLevel == GameLevel.Six) return;
         for (int i = 0; i < currentLevelListOfContainer.Length; i++)
         {
             GameObject objToDisable = currentLevelListOfContainer[i];
