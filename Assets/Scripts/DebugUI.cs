@@ -36,6 +36,14 @@ public class DebugUI : MonoBehaviour
         } 
         else if (level == 5)
         {
+            gameState.ChangeToLevelFour();
+        } 
+        else if (level == 6)
+        {
+            gameState.ChangeToLevelSix();
+        } 
+        else if (level == 7)
+        {
             gameState.ChangeToLevelDone();
         } 
     }

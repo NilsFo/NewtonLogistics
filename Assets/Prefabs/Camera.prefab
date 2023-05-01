@@ -105,7 +105,7 @@ MonoBehaviour:
   m_PivotOffset: {x: 0, y: 0, z: 0}
   m_AmplitudeGain: 0
   m_FrequencyGain: 0
-  mNoiseOffsets: {x: 0, y: 0, z: 0}
+  mNoiseOffsets: {x: 258.9979, y: 290.74878, z: 892.2937}
 --- !u!1 &8416148781040691596
 GameObject:
   m_ObjectHideFlags: 0
@@ -133,7 +133,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8416148781040691596}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -10}
+  m_LocalPosition: {x: 53.87297, y: 129.80455, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -167,7 +167,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 8
+  orthographic size: 20.00011
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -277,8 +277,8 @@ MonoBehaviour:
   secretFollowObj: {fileID: 8416148781468946026}
   followList: []
   zoomMax: 90
-  zoomMinNear: 0
-  zoomMinFar: 21
+  zoomMinNear: 20
+  zoomMinFar: 50
   orthographicZoomScaleDefault: 0.5
   orthographicZoomScaleZoomOut: 1.337
   orthographicZoomSpeedAuto: 0.69
@@ -439,7 +439,7 @@ MonoBehaviour:
   m_Follow: {fileID: 8416148781468946027}
   m_Lens:
     FieldOfView: 60
-    OrthographicSize: 8
+    OrthographicSize: 20
     NearClipPlane: 0.3
     FarClipPlane: 1000
     Dutch: 0

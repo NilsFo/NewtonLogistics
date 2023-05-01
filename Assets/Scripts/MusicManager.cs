@@ -8,10 +8,10 @@ using UnityEngine;
 public class MusicManager : MonoBehaviour
 {
     public GameObject temporalAudioPlayerPrefab;
-    public static float userDesiredMusicVolume = 0.35f;
+    public static float userDesiredMusicVolume = 0.5f;
     public static float userDesiredSoundVolume = 0.5f;
-    public readonly float GLOBAL_MUSIC_VOLUME_MULT = 0.3f;
-    public readonly float GLOBAL_SOUND_VOLUME_MULT = 1.5f;
+    public readonly float GLOBAL_MUSIC_VOLUME_MULT = 0.42f;
+    public readonly float GLOBAL_SOUND_VOLUME_MULT = 1.69001337f;
 
     [Range(0, 1)] public float levelVolumeMult = 1.0f;
 
@@ -52,8 +52,9 @@ public class MusicManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if(audioJail == null) return;
         transform.position = _listener.transform.position;
-        userDesiredSoundVolume = MathF.Min(userDesiredMusicVolume * 3.5f, 1.0f);
+        userDesiredSoundVolume = MathF.Min(userDesiredMusicVolume * 1.0f, 1.0f);
 
         foreach (var audioSource in playList)
         {
