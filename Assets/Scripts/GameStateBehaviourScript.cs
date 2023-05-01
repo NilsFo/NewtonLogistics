@@ -169,7 +169,7 @@ public class GameStateBehaviourScript : MonoBehaviour
             {
                 //Second Press
                 LoadLevel = -1;
-                SceneManager.LoadScene("MainMenuScene");
+                // SceneManager.LoadScene("MainMenuScene");
             }
         }
         else
@@ -181,22 +181,35 @@ public class GameStateBehaviourScript : MonoBehaviour
         if (playerRequestsQuit)
         {
             LoadLevel = -1;
-            SceneManager.LoadScene("MainMenuScene");
+            // SceneManager.LoadScene("MainMenuScene");
         }
 
         bool playerRequestsReset = Keyboard.current.backspaceKey.isPressed;
         if (playerRequestsReset)
         {
-            LoadLevel = -1;
-            if(gameLevel == GameLevel.One) LoadLevel = 1;
-            if(gameLevel == GameLevel.Two) LoadLevel = 2;
-            if(gameLevel == GameLevel.Three) LoadLevel = 3;
-            if(gameLevel == GameLevel.Four) LoadLevel = 4;
-            if(gameLevel == GameLevel.Five) LoadLevel = 5;
-            if(gameLevel == GameLevel.Six) LoadLevel = 6;
-            if(gameLevel == GameLevel.Done) LoadLevel = 7;
-            SceneManager.LoadScene("KairosStation");
+            // LoadLevel = -1;
+            // if(gameLevel == GameLevel.One) LoadLevel = 1;
+            // if(gameLevel == GameLevel.Two) LoadLevel = 2;
+            // if(gameLevel == GameLevel.Three) LoadLevel = 3;
+            // if(gameLevel == GameLevel.Four) LoadLevel = 4;
+            // if(gameLevel == GameLevel.Five) LoadLevel = 5;
+            // if(gameLevel == GameLevel.Six) LoadLevel = 6;
+            // if(gameLevel == GameLevel.Done) LoadLevel = 7;
+            // SceneManager.LoadScene("KairosStation");
         }
+    }
+
+    public void RestartLevel()
+    {
+        LoadLevel = -1;
+        if(gameLevel == GameLevel.One) LoadLevel = 1;
+        if(gameLevel == GameLevel.Two) LoadLevel = 2;
+        if(gameLevel == GameLevel.Three) LoadLevel = 3;
+        if(gameLevel == GameLevel.Four) LoadLevel = 4;
+        if(gameLevel == GameLevel.Five) LoadLevel = 5;
+        if(gameLevel == GameLevel.Six) LoadLevel = 6;
+        if(gameLevel == GameLevel.Done) LoadLevel = 7;
+        SceneManager.LoadScene("KairosStation");
     }
 
     private void CheckPointCompleteness()
