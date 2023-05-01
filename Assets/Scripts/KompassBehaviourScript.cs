@@ -1,7 +1,10 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class KompassBehaviourScript : MonoBehaviour
 {
+    [SerializeField] private Transform pointerContainer;
+    
     [SerializeField] private GameObject prefabStation;
     [SerializeField] private GameObject prefabContainer;
     
@@ -9,117 +12,114 @@ public class KompassBehaviourScript : MonoBehaviour
     [SerializeField] private GameStateBehaviourScript gameState;
 
     [Header("Debug")]
-    [SerializeField] private DumpableBehaviourScript[] listOfDumps;
-    [SerializeField] private GameObject[] listOfDumpableObj;
+    [SerializeField] private GameObject[] listOfContainerObj;
+    [SerializeField] private GameObject[] listOfContainerPointer;
     
-    [SerializeField] private DumpStationBehaviourScript[] listOfDumpStations;
-    [SerializeField] private GameObject[] listOfDumpStationObj;
+    [SerializeField] private GameObject[] listOfStationObj;
+    [SerializeField] private GameObject[] listOfStationPointer;
     
     private void OnEnable()
     {
         if(gameState == null) gameState = FindObjectOfType<GameStateBehaviourScript>();
-        gameState.onDumpListChange.AddListener(UpdateDumps);
-        gameState.onDumpStationChange.AddListener(UpdateDumpStations);
+        gameState.onCurrentLevelListChange.AddListener(UpdateList);
     }
 
     private void OnDisable()
     {
-        gameState.onDumpListChange.RemoveListener(UpdateDumps);
-        gameState.onDumpStationChange.RemoveListener(UpdateDumpStations);
+        gameState.onCurrentLevelListChange.RemoveListener(UpdateList);
     }
 
-    private void UpdateDumps(DumpableBehaviourScript[] list)
+    private void UpdateList(GameObject[] listOfStations, GameObject[] listOfContainer)
     {
-        listOfDumps = list;
-        CleanDumpableObj();
-        CreateDumpableObj();
-        UpdateDumpableObj();
+        listOfContainerObj = listOfContainer;
+        listOfStationObj = listOfStations;
+        
+        CleanPointer();
+        CreatePointer();
     }
 
-    private void CleanDumpableObj()
+    private void CleanPointer()
     {
-        if(listOfDumpableObj == null)
-            return;
-        for (int i = 0; i < listOfDumpableObj.Length; i++)
+        if (listOfStationPointer != null)
         {
-            GameObject obj = listOfDumpableObj[i];
-            Destroy(obj);
+            for (int i = 0; i < listOfStationPointer.Length; i++)
+            {
+                GameObject obj = listOfStationPointer[i];
+                Destroy(obj);
+            }
+            listOfStationPointer = new GameObject[0];
         }
-        listOfDumpableObj = new GameObject[0];
-    }
-
-    private void CreateDumpableObj()
-    {
-        if(listOfDumps == null) return;
-        listOfDumpableObj = new GameObject[listOfDumps.Length];
-        for (int i = 0; i < listOfDumps.Length; i++)
+        if (listOfContainerPointer != null)
         {
-            DumpableBehaviourScript dumb = listOfDumps[i];
-            listOfDumpableObj[i] = Instantiate(prefabContainer, transform);
-            listOfDumpableObj[i].SetActive(true);
+            for (int i = 0; i < listOfContainerPointer.Length; i++)
+            {
+                GameObject obj = listOfContainerPointer[i];
+                Destroy(obj);
+            }
+            listOfContainerPointer = new GameObject[0];
         }
     }
 
-    private void UpdateDumpableObj()
+    private void CreatePointer()
     {
-        if(listOfDumps.Length != listOfDumpableObj.Length) return;
-        for (int i = 0; i < listOfDumps.Length; i++)
+        listOfContainerPointer = new GameObject[listOfContainerObj.Length];
+        for (int i = 0; i < listOfContainerObj.Length; i++)
         {
-            DumpableBehaviourScript dumb = listOfDumps[i];
-            Vector2 pos = circleCollider2D.ClosestPoint(dumb.Rigidbody2D.worldCenterOfMass);
-            listOfDumpableObj[i].transform.position = pos;
+            DumpableBehaviourScript dumb = listOfContainerObj[i].GetComponent<DumpableBehaviourScript>();
+            listOfContainerPointer[i] = Instantiate(prefabContainer, pointerContainer);
+            listOfContainerPointer[i].SetActive(true);
+            
+            if (dumb != null)
+            {
+                Vector2 pos = circleCollider2D.ClosestPoint(dumb.Rigidbody2D.worldCenterOfMass);
+                listOfContainerPointer[i].transform.position = pos;
+            }
+        }
+        
+        listOfStationPointer = new GameObject[listOfStationObj.Length];
+        for (int i = 0; i < listOfStationObj.Length; i++)
+        {
+            DumpStationBehaviourScript dumb = listOfStationObj[i].GetComponentInChildren<DumpStationBehaviourScript>();
+            listOfStationPointer[i] = Instantiate(prefabStation, pointerContainer);
+            listOfStationPointer[i].SetActive(true);
+            
+            if (dumb != null)
+            {
+                Vector2 pos = circleCollider2D.ClosestPoint(dumb.transform.position);
+                listOfStationPointer[i].transform.position = pos;
+            }
         }
     }
 
-    private void UpdateDumpStations(DumpStationBehaviourScript[] list)
+    private void UpdatePointer()
     {
-        listOfDumpStations = list;
-        CleanDumpStationObj();
-        CreateDumpStationObj();
-        UpdateDumpStationObj();
-    }
-    
-    private void CleanDumpStationObj()
-    {
-        if(listOfDumpStationObj == null)
-            return;
-        for (int i = 0; i < listOfDumpStationObj.Length; i++)
+        for (int i = 0; i < listOfContainerObj.Length; i++)
         {
-            GameObject obj = listOfDumpStationObj[i];
-            Destroy(obj);
+            DumpableBehaviourScript dumb = listOfContainerObj[i].GetComponent<DumpableBehaviourScript>();
+            if (dumb != null)
+            {
+                Vector2 pos = circleCollider2D.ClosestPoint(dumb.Rigidbody2D.worldCenterOfMass);
+                listOfContainerPointer[i].transform.position = pos;
+            }
         }
-        listOfDumpStationObj = new GameObject[0];
-    }
 
-    private void CreateDumpStationObj()
-    {
-        if(listOfDumpStations == null) return;
-        listOfDumpStationObj = new GameObject[listOfDumpStations.Length];
-        for (int i = 0; i < listOfDumpStations.Length; i++)
+        for (int i = 0; i < listOfStationObj.Length; i++)
         {
-            DumpStationBehaviourScript dumb = listOfDumpStations[i];
-            listOfDumpStationObj[i] = Instantiate(prefabStation, transform);
-            listOfDumpStationObj[i].SetActive(true);
+            DumpStationBehaviourScript dumb = listOfStationObj[i].GetComponentInChildren<DumpStationBehaviourScript>();
+            if (dumb != null)
+            {
+                Vector2 pos = circleCollider2D.ClosestPoint(dumb.transform.position);
+                listOfStationPointer[i].transform.position = pos;
+            }
         }
     }
-
-    private void UpdateDumpStationObj()
-    {
-        if(listOfDumpStations.Length != listOfDumpStationObj.Length) return;
-        for (int i = 0; i < listOfDumpStations.Length; i++)
-        {
-            DumpStationBehaviourScript dumb = listOfDumpStations[i];
-            Vector2 pos = circleCollider2D.ClosestPoint(dumb.transform.position);
-            listOfDumpStationObj[i].transform.position = pos;
-        }
-    }
-
     
     // Update is called once per frame
     void Update()
     {
-        UpdateDumpableObj();
-        UpdateDumpStationObj();
+        UpdatePointer();
+        bool playerRequestsZoomOut = Keyboard.current.tabKey.isPressed;
+        pointerContainer.gameObject.SetActive(playerRequestsZoomOut);
     }
 }
  

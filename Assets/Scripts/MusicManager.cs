@@ -52,6 +52,7 @@ public class MusicManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if(audioJail == null) return;
         transform.position = _listener.transform.position;
         userDesiredSoundVolume = MathF.Min(userDesiredMusicVolume * 3.5f, 1.0f);
 
