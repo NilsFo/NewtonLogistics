@@ -70,9 +70,10 @@ public class DumpStationBehaviourScript : MonoBehaviour
                 if (dumpForPush.Cargo.cargoState == Cargo.CargoState.Free)
                 {
                     Transform transformDump = dumpForPush.transform;
-                    dumpForPush.Rigidbody2D.velocity = Vector2.zero;
-                    transformDump.position = Vector3.MoveTowards(transformDump.position, generalPushPoint.position,
-                        (pushPower * Time.deltaTime));
+                    //dumpForPush.Rigidbody2D.velocity = Vector2.zero;
+                    /*transformDump.position = Vector3.MoveTowards(transformDump.position, generalPushPoint.position,
+                        (pushPower * Time.deltaTime));*/
+                    dumpForPush.Rigidbody2D.AddForce((generalPushPoint.position - transformDump.position).normalized * (500f * Time.deltaTime));
                 }
             }
         }
