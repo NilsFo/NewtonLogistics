@@ -6,7 +6,6 @@ public class DumpStationBehaviourScript : MonoBehaviour
 {
     [Header("Ref")]
     [SerializeField] private Collider2D myCollider2D;
-    [SerializeField] private TextMeshProUGUI textLabel;
     [SerializeField] private Transform generalAttractorPoint = null;
     [SerializeField] private Transform generalPushPoint = null;
 
@@ -43,11 +42,6 @@ public class DumpStationBehaviourScript : MonoBehaviour
         {
             listOfSuck = new List<DumpableBehaviourScript>();
         }
-    }
-
-    private void Start()
-    {
-        textLabel.text = "" + (stationIndex + 1);
     }
 
     // Update is called once per frame
