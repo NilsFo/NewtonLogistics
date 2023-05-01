@@ -51,13 +51,45 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3044773438194038325, guid: 813b2fecf013bb44ca31747fabfe1999, type: 3}
+      propertyPath: m_RootOrder
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 3044773438194038325, guid: 813b2fecf013bb44ca31747fabfe1999, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 3.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 4649523491417548898, guid: 813b2fecf013bb44ca31747fabfe1999, type: 3}
+      propertyPath: m_RootOrder
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 4649523491417548898, guid: 813b2fecf013bb44ca31747fabfe1999, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -3.75
+      objectReference: {fileID: 0}
     - target: {fileID: 4738535073953374655, guid: 813b2fecf013bb44ca31747fabfe1999, type: 3}
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5981076452189930801, guid: 813b2fecf013bb44ca31747fabfe1999, type: 3}
+      propertyPath: m_RootOrder
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 5981076452189930801, guid: 813b2fecf013bb44ca31747fabfe1999, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -3.75
+      objectReference: {fileID: 0}
     - target: {fileID: 6851783698578974347, guid: 813b2fecf013bb44ca31747fabfe1999, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8176898380570096863, guid: 813b2fecf013bb44ca31747fabfe1999, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 3.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 8176898380570096863, guid: 813b2fecf013bb44ca31747fabfe1999, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.75
       objectReference: {fileID: 0}
     - target: {fileID: 8629260293993371693, guid: 813b2fecf013bb44ca31747fabfe1999, type: 3}
       propertyPath: m_Sprite
