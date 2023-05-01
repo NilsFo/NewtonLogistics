@@ -138,7 +138,10 @@ public class ShipController : MonoBehaviour {
         if (kb.fKey.isPressed) {
             _magnetOn = true;
         }
-        if (kb.digit1Key.wasPressedThisFrame || kb.rKey.wasPressedThisFrame) {
+        if (kb.rKey.wasPressedThisFrame) {
+            DisconnectLast(kb.shiftKey.isPressed);
+        }
+        if (kb.digit1Key.wasPressedThisFrame) {
             Disconnect(0, kb.shiftKey.isPressed);
         }
         if (kb.digit2Key.wasPressedThisFrame) {
@@ -203,7 +206,7 @@ public class ShipController : MonoBehaviour {
         List<Cargo> cargoOccupied = new List<Cargo>();
         List<(Connector, Connector)> tempConnectors = new List<(Connector, Connector)>();
         foreach (var (outsideCon, cargoCon) in _nearbyConnectors) {
-            var cargo = cargoCon.GetComponentInParent<Cargo>();
+            var cargo = cargoCon.cargo;
             if (connectorsOccupied.Contains(outsideCon) || cargoOccupied.Contains(cargo)) {
                 continue;
             }
@@ -306,6 +309,16 @@ public class ShipController : MonoBehaviour {
         gameState.cameraController.AddFollowTarget(cargo.gameObject);
         
         clickSound.Play();
+    }
+
+    public void DisconnectLast(bool strongPush = false) {
+        for (var index = _insideConnectors.Length - 1; index >= 0; index--) {
+            var (c1, c2) = _insideConnectors [index];
+            if (c1 != null) {
+                Disconnect(index, strongPush);
+                return;
+            }
+        }
     }
 
     public void Disconnect(int index, bool strongPush = false) {

@@ -12,6 +12,11 @@ public class Connector : MonoBehaviour {
 
     public Connector couldConnect;
     public SpriteRenderer connectionLine, connectionInsideBtn;
+    public Cargo cargo;
+
+    void Start() {
+        cargo = GetComponentInParent<Cargo>();
+    }
 #if UNITY_EDITOR
     private void OnDrawGizmos() {
         switch(connectorState) {
