@@ -70,6 +70,9 @@ public class GameStateBehaviourScript : MonoBehaviour
     [SerializeField] private GameObject[] currentLevelListOfStations;
     [SerializeField] private Dictionary<string, int> points;
 
+    private int playerRequestsQuitCounter = 0;
+    private bool playerRequestsQuitWasReleased = true;
+    
     private void Awake()
     {
         player = FindObjectOfType<ShipController>();
@@ -157,6 +160,24 @@ public class GameStateBehaviourScript : MonoBehaviour
         }
         
         bool playerRequestsQuit = Keyboard.current.escapeKey.isPressed;
+        if (playerRequestsQuit && playerRequestsQuitWasReleased) 
+        {
+            playerRequestsQuitCounter++;
+            playerRequestsQuitWasReleased = false;
+            
+            if (playerRequestsQuitCounter > 1)
+            {
+                //Second Press
+                LoadLevel = -1;
+                SceneManager.LoadScene("MainMenuScene");
+            }
+        }
+        else
+        {
+            playerRequestsQuitWasReleased = true;
+        }
+
+
         if (playerRequestsQuit)
         {
             LoadLevel = -1;
