@@ -86,7 +86,7 @@ public class ShipController : MonoBehaviour {
             PullConnectors();
         }
         if (_bThrustOn || _fThrustOn || _lbThrustOn || _lfThrustOn || _rbThrustOn || _rfThrustOn) {
-            thrusterSound.volume = 0.5f;
+            thrusterSound.volume = 0.2f;
         } else {
             thrusterSound.volume = 0;
         }
@@ -316,6 +316,10 @@ public class ShipController : MonoBehaviour {
             return;
         }
         var cargo = leaveConnector.GetComponentInParent<Cargo>();
+        if (cargo == null) {
+            Debug.LogWarning("Cargo is null while disconnecting. What happened here?");
+            return;
+        }
         foreach (var cargoConnector in cargo.connectors) {
             if (cargoConnector.connectorState == Connector.ConnectorState.AttachedInside && cargoConnector != leaveConnector) {
                 for (int i = 0; i < MAX_CONNECTORS; i++) {
