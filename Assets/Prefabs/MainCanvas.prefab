@@ -395,16 +395,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb8db20034ea5934bb1eacc57b03b097, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameState: {fileID: 0}
   nameLable: {fileID: 5016630549458524068}
   prefabLabel: {fileID: 3084667842070457989}
   container: {fileID: 5039242944954871795}
   images: []
-  stationIndex: 0
-  currentState: 0
-  maxState: 0
   offSprite: {fileID: 21300000, guid: de3811a0be581064f8073567bb863985, type: 3}
   onSprite: {fileID: 21300000, guid: f4ca65b13d4a8d844a7389f416f1dc6d, type: 3}
+  stationObj: {fileID: 0}
+  stationBehaviourScript: {fileID: 0}
 --- !u!1 &2229050235479639763
 GameObject:
   m_ObjectHideFlags: 0
@@ -825,7 +823,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &6298168023287651829
 RectTransform:
   m_ObjectHideFlags: 0
@@ -964,6 +962,8 @@ MonoBehaviour:
   prefabStationLabel: {fileID: 1810356275861392505}
   container: {fileID: 3184326172824892088}
   gameState: {fileID: 0}
+  listOfContainerObj: []
+  listOfStationObj: []
 --- !u!1 &3726459732637073758
 GameObject:
   m_ObjectHideFlags: 0
