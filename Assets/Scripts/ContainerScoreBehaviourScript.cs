@@ -41,13 +41,11 @@ public class ContainerScoreBehaviourScript : MonoBehaviour
     
     private void CleanStationPanels()
     {
-        if(_stationPanels == null) return;
-        for (int i = 0; i < _stationPanels.Length; i++)
+        foreach(Transform child in container.transform)
         {
-            GameObject panel = _stationPanels[i].gameObject;
-            Destroy(panel);
+            Destroy(child.gameObject);
         }
-        _stationPanels = null;
+        _stationPanels = new StationPanelBehaviourScript[0];;
     }
 
     private void CreateStationPanels()
