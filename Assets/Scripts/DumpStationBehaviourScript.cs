@@ -23,6 +23,8 @@ public class DumpStationBehaviourScript : MonoBehaviour
     [SerializeField] private List<DumpableBehaviourScript> listOfOverlapCenterMass;
     [SerializeField] private List<DumpableBehaviourScript> listOfSuck;
 
+    private GameStateBehaviourScript _gameState;
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -42,6 +44,8 @@ public class DumpStationBehaviourScript : MonoBehaviour
         {
             listOfSuck = new List<DumpableBehaviourScript>();
         }
+
+        _gameState = FindObjectOfType<GameStateBehaviourScript>();
     }
 
     // Update is called once per frame
@@ -120,6 +124,7 @@ public class DumpStationBehaviourScript : MonoBehaviour
         if (dumpableBehaviourScript.DumpStationIndex == stationIndex)
         {
             listOfInTrigger.Add(dumpableBehaviourScript);
+            _gameState.PlayCollectSong();
         }
         else
         {

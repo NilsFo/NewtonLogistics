@@ -28,6 +28,7 @@ public class ShipController : MonoBehaviour {
 
     private GameStateBehaviourScript gameState;
 
+    public AudioClip firedClip;
     public AudioSource thrusterSound, clickSound, releaseSound;
     private float thrusterSoundDesired = 0;
     public float thrusterSoundChangeSpeed = 1.337f;
@@ -40,6 +41,9 @@ public class ShipController : MonoBehaviour {
         InvokeRepeating(nameof(UpdateNearbyConnectors), 0.1f, 0.1f);
         StopAllEmissions();
         musicManager = FindObjectOfType<MusicManager>();
+        
+        clickSound.volume=clickSound.volume*musicManager.GetVolumeSound();
+        releaseSound.volume=releaseSound.volume*musicManager.GetVolumeSound(); 
     }
 
     // Update is called once per frame
@@ -57,11 +61,8 @@ public class ShipController : MonoBehaviour {
 
         thrusterSound.volume = Mathf.Lerp(thrusterSound.volume, thrusterSoundDesired,
             Time.deltaTime * thrusterSoundChangeSpeed);
-        print(thrusterSound.volume);
         
         thrusterSound.volume=thrusterSound.volume*musicManager.GetVolumeSound();
-         clickSound.volume=clickSound.volume*musicManager.GetVolumeSound();
-         releaseSound.volume=releaseSound.volume*musicManager.GetVolumeSound(); 
     }
 
     private void FixedUpdate() {
@@ -383,6 +384,10 @@ public class ShipController : MonoBehaviour {
         connectedCargo.Remove(cargo);
         gameState.cameraController.RemoveFollowTarget(cargo.gameObject);
 
+        if (strongPush)
+        {
+            musicManager.CreateAudioClip(firedClip,transform.position);
+        }else
         if (!releaseSound.isPlaying) {
             releaseSound.Play();
         }

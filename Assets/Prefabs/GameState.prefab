@@ -48,20 +48,32 @@ MonoBehaviour:
   onGameStateChange:
     m_PersistentCalls:
       m_Calls: []
-  onStatsChange:
+  onCurrentLevelListChange:
     m_PersistentCalls:
       m_Calls: []
-  onDumpListChange:
-    m_PersistentCalls:
-      m_Calls: []
-  onDumpStationChange:
-    m_PersistentCalls:
-      m_Calls: []
+  listContainerForLevelOne: []
+  listStationForLevelOne: []
+  listContainerForLevelTwo: []
+  listStationForLevelTwo: []
+  listContainerForLevelThree: []
+  listStationForLevelThree: []
+  listContainerForLevelFour: []
+  listStationForLevelFour: []
+  listContainerForLevelFive: []
+  listStationForLevelFive: []
+  listContainerForLevelSix: []
+  listStationForLevelSix: []
   gameState: 0
   gameLevel: 0
-  currentStatsArray: []
   player: {fileID: 0}
   cameraController: {fileID: 0}
+  musicManager: {fileID: 0}
+  listOfDump: []
+  listOfDumpStations: []
+  currentLevelListOfContainer: []
+  currentLevelListOfStations: []
+  nextLevelSound: {fileID: 8300000, guid: 544283d9880757a44a63f6db643f84fa, type: 3}
+  cargoCollectSound: {fileID: 0}
 --- !u!114 &1384797605
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -75,6 +87,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameState: {fileID: 1572876525}
+  dialogueManager: {fileID: 0}
+  msgTimer: 6
+  msgOffset: 2
   introTime: 3
   currentTime: 0
   inPlaying: 0
