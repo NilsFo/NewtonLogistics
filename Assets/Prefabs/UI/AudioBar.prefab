@@ -103,7 +103,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: 7d2dd9fa6045f4c4cad10b46366edeee, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -122,6 +122,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2877583429024697050}
+  - component: {fileID: 2506620291638624812}
   m_Layer: 5
   m_Name: AudioBar
   m_TagString: Untagged
@@ -151,6 +152,23 @@ RectTransform:
   m_AnchoredPosition: {x: -135, y: 41.4}
   m_SizeDelta: {x: 217.573, y: 43.0622}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &2506620291638624812
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2264386326919357493}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad2f138a69e736f4bb431d546f74cf06, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  myIcon: {fileID: 7017525932205796930}
+  iconVariance1: {fileID: 21300000, guid: 12019778367147044a98b1c718bc123c, type: 3}
+  iconVariance2: {fileID: 21300000, guid: 3f72e2fd3e4051141b6c8127e1b1dc7d, type: 3}
+  iconVariance3: {fileID: 21300000, guid: 87a172ebd1e410541aa486200bd70230, type: 3}
+  iconVariance4: {fileID: 21300000, guid: 0fdd399723e215d43a133a42878901d9, type: 3}
 --- !u!1 &4395897975464870406
 GameObject:
   m_ObjectHideFlags: 0
@@ -212,11 +230,11 @@ MonoBehaviour:
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
-    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_NormalColor: {r: 0.58431375, g: 0.76470596, b: 0.91372555, a: 1}
+    m_HighlightedColor: {r: 0.454902, g: 0.627451, b: 0.8196079, a: 1}
+    m_PressedColor: {r: 0.35686275, g: 0.32156864, b: 0.5019608, a: 1}
+    m_SelectedColor: {r: 0.58431375, g: 0.76470596, b: 0.91372555, a: 1}
+    m_DisabledColor: {r: 0.43921572, g: 0.6313726, b: 0.56078434, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:
@@ -238,7 +256,7 @@ MonoBehaviour:
   m_MinValue: 0
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0
+  m_Value: 0.5
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -338,7 +356,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.454902, g: 0.627451, b: 0.8196079, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -414,7 +432,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.8705883, g: 0.8862746, b: 0.70980394, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -490,7 +508,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.9058824, g: 0.9215687, b: 0.7372549, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
